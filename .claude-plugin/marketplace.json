@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "game-design",
+      "description": "AI-powered game design assistant — Socratic interview for design extraction + zero-creativity document generation",
+      "path": "."
+    }
+  ]
+}
