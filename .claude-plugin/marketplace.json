@@ -1,9 +1,16 @@
 {
+  "name": "cleavestudio-game-design",
+  "owner": {
+    "name": "CleaveStudio"
+  },
   "plugins": [
     {
       "name": "game-design",
       "description": "AI-powered game design assistant — Socratic interview for design extraction + zero-creativity document generation",
-      "path": "."
+      "source": {
+        "type": "local",
+        "path": "."
+      }
     }
   ]
 }
