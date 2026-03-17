@@ -1,0 +1,8 @@
+{
+  "name": "game-design",
+  "description": "AI-powered game design assistant — Socratic interview for design extraction + zero-creativity document generation",
+  "version": "1.0.0",
+  "author": {
+    "name": "CleaveStudio"
+  }
+}
