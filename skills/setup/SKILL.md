@@ -93,27 +93,34 @@ Find the plugin's `ui-template/` directory. Use Glob to find `**/ui-template/ser
 
 Copy all infrastructure files to `{ui_path}/` using Bash:
 ```bash
-cp {template_dir}/index.html {template_dir}/system.css {template_dir}/inspector.js {template_dir}/scenario-player.js {template_dir}/server.js {ui_path}/
+cp {template_dir}/index.html {template_dir}/system.css {template_dir}/inspector.js {template_dir}/scenario-player.js {template_dir}/server.js {template_dir}/utils.js {ui_path}/
 ```
 
-**NEVER overwrite `common.css`** if it already exists — it contains the project's visual theme. All other infrastructure files are safe to overwrite on reinit.
+**NEVER overwrite `common.css`** if it already exists — it contains the game's visual tokens. **NEVER overwrite `system.css`** if user has customized the tool theme (check if `--sys-*` values differ from defaults). All other infrastructure files are safe to overwrite on reinit.
 
-### 7. UI Theme (common.css)
+### 7. Tool Theme (system.css)
 
-Use `AskUserQuestion` to let the user choose:
+The design system tool's appearance is controlled by `--sys-*` CSS variables at the top of `system.css`. Use `AskUserQuestion` to ask the user how they want the tool to look.
 
-**If `common.css` already exists:**
-* Options: "Keep current theme", "Redesign in project style" (only if project has Visuals/style docs), "Redesign custom", "Skip"
-
-**If `common.css` doesn't exist:**
-* Options: "Create from project style" (only if project has Visuals/style docs), "Describe my own style", "Neutral dark theme (default)", "Skip for now"
+* Options: "Describe my style" (e.g., "warm dark with orange accent", "light minimalist", "green terminal"), "Keep default (dark purple)", "Skip"
 
 **Based on choice:**
-* **Keep current** — do nothing.
-* **Create from project style / Redesign in project style** — you read the project documents in step 2. Use the visual direction, genre, and platform from those documents. Launch `ui-designer` agent with a task to create `common.css` matching the project's described style. Pass the relevant document content as context.
-* **Describe my own style** — ask the user for platform (PC/Mobile/Console) and a brief style description or reference games. Then launch `ui-designer` to create `common.css`.
-* **Neutral dark theme** — launch `ui-designer` with a task to create a minimal `common.css` with neutral dark defaults. Can be customized later.
-* **Skip** — do nothing. UI mockups will work but without game-specific styling.
+* **Keep default / Skip** — do nothing.
+* **Describe my style** — edit the `--sys-*` variables in `{ui_path}/system.css` using the Edit tool to match the user's description. The variables: `--sys-bg`, `--sys-surface`, `--sys-surface-hover`, `--sys-border`, `--sys-border-hover`, `--sys-text`, `--sys-text-dim`, `--sys-text-bright`, `--sys-accent`, `--sys-accent-dim`, `--sys-danger`, `--sys-radius`.
+
+### 7b. Game Tokens (common.css)
+
+`common.css` defines the game's visual identity — colors, fonts, spacing used by UI mockups. It is separate from the tool theme.
+
+**If `common.css` already exists:** skip. It will be created/updated by the ui-designer agent when the user runs `/design-ui`.
+
+**If `common.css` doesn't exist:** ask the user:
+* Options: "Create from project style" (only if project has Visuals/style docs), "Describe game style", "Skip for now"
+
+**Based on choice:**
+* **Create from project style** — Launch `ui-designer` agent in **Mode C** with the task: "Mode C: Create {ui_path}/common.css". Pass the full text of Visuals/Synopsis documents and a concrete style summary (genre, platform, setting, visual direction).
+* **Describe game style** — ask the user for platform and style description. Launch `ui-designer` in **Mode C** with: "Mode C: Create {ui_path}/common.css. Platform: {platform}. Style: {description}."
+* **Skip** — do nothing. common.css will be created later when the user first runs `/design-ui`.
 
 ### 8. Check Node.js
 
@@ -156,8 +163,9 @@ Next steps:
 ## On Reinitialize
 
 When the project is already set up and user wants to reinit:
-* Update infrastructure files (index.html, system.css, etc.) — safe to overwrite
+* Update infrastructure files (index.html, system.css, utils.js, etc.) — safe to overwrite
 * Do NOT touch: common.css, anything in Components/, Screens/, Flows/, Animations/, Design/, Lore/
+* system.css: safe to overwrite UNLESS user customized the tool theme — in that case, preserve the `--sys-*` variable values
 * Do NOT touch: .claude/project-structure.json (unless user wants to change paths)
 * Restart the server
 
