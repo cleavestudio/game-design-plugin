@@ -8,11 +8,23 @@ tools: Read, Glob, Grep, Write, Edit, AskUserQuestion, Bash
 
 These rules are non-negotiable. Violating ANY of them means the work must be redone.
 
-## Rule 1: COMPONENTS FIRST, ALWAYS
-Before creating a Screen, Flow, or Animation — create the Components it needs. Every visible element on screen MUST be a Web Component from `{ui}/Components/`. If you need a button, a bar, a panel, a slot — create it as a component first. Then use `<component-name>` tags in screens.
+## Rule 1: EVERYTHING IS A COMPONENT
+Every single visible element MUST be a Web Component from `{ui}/Components/`. This includes:
+* Buttons, sliders, checkboxes, toggles
+* Panels, frames, cards, containers
+* Bars (health, mana, XP, loading)
+* Slots (inventory, equipment, skill)
+* Labels, titles, stat displays, currency indicators
+* Icons, badges, tooltips, indicators
 
-**WRONG:** Creating a Screen with inline HTML for a health bar.
-**RIGHT:** Creating `Components/HealthBar.js` first, then using `<health-bar>` in the Screen.
+**There is NO element small enough to be inline HTML.** If you can see it — it's a component.
+
+Components can be **grouped by type** in one file. Example: `Components/Buttons.js` can define `<btn-primary>`, `<btn-secondary>`, `<btn-icon>` all in one file. Similarly `Components/Panels.js` can define `<panel-default>`, `<panel-header>`, etc.
+
+Before creating a Screen, Flow, or Animation — create ALL the Components it needs FIRST. Then assemble.
+
+**WRONG:** `<div class="button">Start Game</div>` inside a Screen.
+**RIGHT:** `<btn-primary label="Start Game"></btn-primary>` — where `btn-primary` is defined in `Components/Buttons.js`.
 
 ## Rule 2: ZERO INLINE STYLES
 NEVER use `style="..."` attributes in HTML. All styling goes through CSS classes defined in `common.css` or component-specific stylesheets. The ONLY exception is `width` and `height` on the top-level screen container.
@@ -23,16 +35,31 @@ NEVER use `style="..."` attributes in HTML. All styling goes through CSS classes
 ## Rule 3: NEVER CREATE .html FILES
 All Screens, Flows, and Animations are `.js` modules that export `render(container)`. Never create standalone HTML files. The system loads everything dynamically through `index.html`.
 
-## Rule 4: FLOW ≠ ANIMATION
-* **Flow** = clickable prototype. User clicks buttons to navigate between screens. NO ScenarioPlayer, NO timeline, NO auto-play. Just buttons and show/hide logic.
-* **Animation** = scripted visual sequence with ScenarioPlayer controls. Play/pause/scrub. User watches, not clicks.
+## Rule 4: SCREENS HAVE ZERO LOGIC
+A Screen is a static assembly of components. It has:
+* Component tags (`<panel-header>`, `<btn-primary>`, `<item-slot>`)
+* Layout CSS classes
+* `data-spec-*` attributes
 
-If the user asks "show how you go from menu to settings" — that's a **Flow**. If the user asks "show the animation of the settings panel opening" — that's an **Animation**.
+A Screen does NOT have:
+* `onclick`, `addEventListener`, or any JS event handlers
+* Navigation logic (show/hide other screens)
+* `import`, `querySelector`, or any JS code beyond the `render()` function that sets `innerHTML`
+* Transitions or animations
 
-## Rule 5: CHECK EXISTING COMPONENTS
+**If you're writing JS logic in a Screen — STOP. That logic belongs in a Flow or Animation.**
+
+## Rule 5: ONLY FLOWS HAVE NAVIGATION LOGIC
+* **Flow** = clickable prototype. Embeds Screens and adds navigation between them. ALL click handlers, show/hide, transitions live HERE. Not in Screens.
+* **Animation** = scripted visual sequence with ScenarioPlayer. User watches, not clicks.
+
+If the user asks "show how you go from menu to settings" — that's a **Flow**.
+If the user asks "show the animation of the settings panel opening" — that's an **Animation**.
+
+## Rule 6: CHECK EXISTING COMPONENTS
 Before creating ANYTHING, read all files in `{ui}/Components/`. If a component already exists that does what you need — USE IT. Do not create duplicates.
 
-## Rule 6: NO SERVER CHECKS
+## Rule 7: NO SERVER CHECKS
 Do NOT run curl to check if the server is running. Do NOT start the server. Just create the files. The server is the user's responsibility.
 
 ---
@@ -144,43 +171,60 @@ export function render(container) {
 }
 ```
 
-## SCREEN (full layout)
-`{ui}/Screens/{Name}.js` — assembles Components ONLY. No inline HTML elements.
+## SCREEN (static layout — ZERO logic)
+`{ui}/Screens/{Name}.js` — pure assembly of Components. No JS logic. No event handlers.
+
+A Screen is like an HTML template: it places components, gives them attributes, wraps them in layout divs. Nothing else.
 ```js
 export function render(container) {
-  // All user-visible text in USER'S LANGUAGE
   container.innerHTML = `
     <div class="screen-container"
-         data-spec-name="Screen Name"
-         data-spec-states="State1 | State2">
-      <!-- ONLY component tags here. Every element = a Web Component from Components/ -->
-      <component-a attr="value"></component-a>
-      <component-b attr="value"></component-b>
+         data-spec-name="Main Menu"
+         data-spec-states="Default | No save file: continue button disabled">
+      <div class="menu-layout">
+        <panel-header title="GAME NAME"></panel-header>
+        <div class="menu-buttons">
+          <btn-primary label="Continue" id="btn-continue"></btn-primary>
+          <btn-primary label="New Game" id="btn-newgame"></btn-primary>
+          <btn-secondary label="Settings" id="btn-settings"></btn-secondary>
+          <btn-secondary label="Quit" id="btn-quit"></btn-secondary>
+        </div>
+      </div>
     </div>`;
+  // NO addEventListener here. NO onclick. NO show/hide logic.
+  // Buttons exist but do nothing. Flow will wire them up.
 }
 ```
 
-## FLOW (clickable prototype) — NO ANIMATION
-`{ui}/Flows/{Name}.js` — components connected by buttons. User clicks to navigate.
+## FLOW (navigation between Screens — ALL logic lives here)
+`{ui}/Flows/{Name}.js` — loads multiple Screens, wires up navigation between them.
+
+Screens are rendered inside flow containers. The Flow adds ALL click handlers and transition logic. Screens themselves remain pure templates.
 ```js
+import { render as renderMenu } from '../Screens/MainMenu.js';
+import { render as renderSettings } from '../Screens/Settings.js';
+
 export function render(container) {
   container.innerHTML = `
-    <div class="flow-screen" id="fs-one">
-      <screen-a></screen-a>
-    </div>
-    <div class="flow-screen flow-hidden" id="fs-two">
-      <screen-b></screen-b>
-    </div>`;
+    <div class="flow-frame" id="fs-menu"></div>
+    <div class="flow-frame flow-hidden" id="fs-settings"></div>`;
 
-  const screens = container.querySelectorAll('.flow-screen');
+  // Render screens into their containers
+  renderMenu(container.querySelector('#fs-menu'));
+  renderSettings(container.querySelector('#fs-settings'));
+
+  // ALL navigation logic lives HERE, not in Screens
   function show(id) {
-    screens.forEach(s => s.classList.add('flow-hidden'));
+    container.querySelectorAll('.flow-frame').forEach(s => s.classList.add('flow-hidden'));
     container.querySelector('#' + id).classList.remove('flow-hidden');
   }
-  // Wire up buttons INSIDE the components (or add flow-nav buttons)
+
+  // Wire up buttons that were placed by Screens
+  container.querySelector('#btn-settings').addEventListener('click', () => show('fs-settings'));
+  container.querySelector('#btn-back').addEventListener('click', () => show('fs-menu'));
 }
 ```
-**NO ScenarioPlayer. NO auto-play. NO timeline.** Just click and show/hide.
+**NO ScenarioPlayer. NO auto-play. NO timeline.** Screens are loaded as static templates. Flow adds behavior.
 
 ## ANIMATION (scripted sequence with player controls)
 `{ui}/Animations/{Name}.js` — uses ScenarioPlayer + Web Animations API. User watches.
@@ -207,13 +251,14 @@ export function render(container) {
 
 Before you write any file, verify:
 - [ ] I read all existing Components/
-- [ ] I listed which components this screen needs
-- [ ] I checked which components already exist
-- [ ] I'm creating missing Components BEFORE the Screen/Flow/Animation
-- [ ] My Screen/Flow/Animation contains ONLY `<component-name>` tags, no inline HTML elements
+- [ ] I listed EVERY element this screen needs (every button, panel, label, bar, slot, icon)
+- [ ] I checked which components already exist — reusing them
+- [ ] I'm creating ALL missing Components BEFORE the Screen/Flow/Animation
+- [ ] My Screens contain ONLY `<component-name>` tags — zero `<div>`, `<button>`, `<span>` with visible content
+- [ ] My Screens have ZERO JS logic — no addEventListener, no onclick, no show/hide
 - [ ] I have ZERO `style="..."` attributes (except top-level container size)
 - [ ] Every visible element has `data-spec-*` attributes
-- [ ] If this is a Flow — NO ScenarioPlayer, just buttons
+- [ ] If this is a Flow — navigation logic is HERE, not in Screens. NO ScenarioPlayer.
 - [ ] If this is an Animation — YES ScenarioPlayer with Web Animations API
 
 # SIGNALS
