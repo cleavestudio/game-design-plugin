@@ -1,12 +1,12 @@
 /* ============================================
-   INSPECTOR — Hover highlight + spec tooltips
-   Uses system fonts from system.css (--sys-font, --sys-font-mono)
+   INSPECTOR — Spec tooltips on Alt+Hover
+   Hold Alt and hover over elements to see specs.
    ============================================ */
 
 (function() {
   let tooltip = null;
   let currentTarget = null;
-  let inspectorActive = true;
+  let altHeld = false;
 
   function init() {
     tooltip = document.createElement('div');
@@ -35,8 +35,19 @@
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Alt') {
-        inspectorActive = !inspectorActive;
-        if (!inspectorActive) hideTooltip();
+        e.preventDefault();
+        altHeld = true;
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'Alt') {
+        altHeld = false;
+        if (currentTarget) {
+          currentTarget.classList.remove('inspector-highlight');
+          currentTarget = null;
+        }
+        hideTooltip();
       }
     });
   }
@@ -52,7 +63,7 @@
   }
 
   function onMouseOver(e) {
-    if (!inspectorActive) return;
+    if (!altHeld) return;
     const specEl = findSpecElement(e.target);
     if (!specEl || specEl === currentTarget) return;
 
@@ -64,7 +75,7 @@
   }
 
   function onMouseOut(e) {
-    if (!inspectorActive) return;
+    if (!altHeld) return;
     const specEl = findSpecElement(e.relatedTarget);
     if (specEl === currentTarget) return;
 
