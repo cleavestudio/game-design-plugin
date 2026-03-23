@@ -89,35 +89,31 @@ Write `.claude/project-structure.json` with the resolved paths:
 
 ### 6. Copy UI Infrastructure
 
-Find the plugin's `ui-template/` directory. It's in the same plugin as this skill — look for it relative to the skill's own path. Use Glob to find `**/ui-template/server.js` if needed.
+Find the plugin's `ui-template/` directory. Use Glob to find `**/ui-template/server.js` — the directory containing it is the template source.
 
-Copy these files to `{ui_path}/`:
-* `index.html`
-* `system.css`
-* `inspector.js`
-* `scenario-player.js`
-* `server.js`
-
-Method: Read each file from the plugin template, Write it to the project.
+Copy all infrastructure files to `{ui_path}/` using Bash:
+```bash
+cp {template_dir}/index.html {template_dir}/system.css {template_dir}/inspector.js {template_dir}/scenario-player.js {template_dir}/server.js {ui_path}/
+```
 
 **NEVER overwrite `common.css`** if it already exists — it contains the project's visual theme. All other infrastructure files are safe to overwrite on reinit.
 
-### 7. Create common.css
+### 7. UI Theme (common.css)
 
-If `{ui_path}/common.css` doesn't exist:
+Use `AskUserQuestion` to let the user choose:
 
-**First, check if the project already describes the visual style/platform.** You read documents in step 2 — use that information. If the documents describe the game's genre, platform, or visual direction, use it directly instead of asking.
+**If `common.css` already exists:**
+* Options: "Keep current theme", "Redesign in project style" (only if project has Visuals/style docs), "Redesign custom", "Skip"
 
-**Only ask what you don't already know:**
-* Platform (PC / Mobile / Console) — if not found in documents
-* Visual style reference — if not found in documents
+**If `common.css` doesn't exist:**
+* Options: "Create from project style" (only if project has Visuals/style docs), "Describe my own style", "Neutral dark theme (default)", "Skip for now"
 
-Then launch the `ui-designer` agent with a task to create `common.css` with:
-* CSS variables for the palette
-* Font imports matching the style
-* Base component styles
-
-If the user doesn't want to configure style yet — create a minimal `common.css` with neutral dark theme defaults. It can be customized later.
+**Based on choice:**
+* **Keep current** — do nothing.
+* **Create from project style / Redesign in project style** — you read the project documents in step 2. Use the visual direction, genre, and platform from those documents. Launch `ui-designer` agent with a task to create `common.css` matching the project's described style. Pass the relevant document content as context.
+* **Describe my own style** — ask the user for platform (PC/Mobile/Console) and a brief style description or reference games. Then launch `ui-designer` to create `common.css`.
+* **Neutral dark theme** — launch `ui-designer` with a task to create a minimal `common.css` with neutral dark defaults. Can be customized later.
+* **Skip** — do nothing. UI mockups will work but without game-specific styling.
 
 ### 8. Check Node.js
 
