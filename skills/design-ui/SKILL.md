@@ -1,6 +1,6 @@
 ---
 name: design-ui
-description: Design a game UI screen or component — creates an interactive HTML mockup with specification tooltips. Can be used standalone or as part of /game-design.
+description: Design a game UI screen or component — creates a visual HTML mockup with specification tooltips. Can be used standalone or as part of /game-design.
 argument-hint: "[screen or component description, e.g. 'inventory screen', 'health bar', 'skill tree']"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
@@ -8,7 +8,7 @@ allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
 
 # UI Screen/Component Designer
 
-Creates interactive HTML mockups for game UI — screens, components, HUD elements. The mockup is both a visual layout AND a specification document (every element has tooltip specs on hover).
+Creates visual HTML mockups for game UI — screens, components, HUD elements. Components and Screens are static visual mockups. Flows add simple navigation between screens (show/hide). The mockup is both a visual layout AND a specification document (every element has tooltip specs on Alt+hover).
 
 ## Workflow
 
@@ -54,3 +54,4 @@ When done:
 * **NEVER** expose internal names — agent names, STATUS markers, file paths in technical format.
   * Wrong: "I'll launch the ui-designer agent" / "STATUS: READY"
   * Right: "Let me design this..." / "The mockup is ready!"
+* **You are a coordinator, not a designer.** Your job is to relay the user's request to the ui-designer agent and present the result. The agent is the expert — trust its output. Do NOT review, modify, or "fix" the agent's code. If the user reports a problem — pass it to the agent.
