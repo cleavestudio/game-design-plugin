@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "game-design",
-      "description": "AI-powered game design assistant — Socratic interview for design extraction + zero-creativity document generation",
+      "description": "Game design studio — 7 specialized agents for mechanics design, lore, UI mockups, audio, visual specs, quality review, and document generation. Includes interactive HTML UI Design System.",
       "source": "./"
     }
   ]

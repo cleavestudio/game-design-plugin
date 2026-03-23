@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game UI Design System</title>
+  <link rel="stylesheet" href="system.css">
+  <link rel="stylesheet" href="common.css">
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+
+    .app { display: flex; height: 100vh; }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--sys-bg);
+      border-right: 1px solid var(--sys-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--sys-border);
+      flex-shrink: 0;
+    }
+
+    .sidebar-title { font-size: 14px; font-weight: 700; color: var(--sys-text-bright); }
+    .sidebar-subtitle { font-size: 11px; color: var(--sys-text-dim); margin-top: 2px; }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 16px;
+    }
+
+    /* Collapsible sections */
+    .sidebar-section { border-bottom: 1px solid var(--sys-border); }
+
+    .sidebar-section-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      text-align: left;
+      font-family: var(--sys-font);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      color: var(--sys-text-dim);
+      cursor: pointer;
+      transition: color 0.1s;
+    }
+
+    .sidebar-section-header:hover { color: var(--sys-text); }
+
+    .sidebar-section-header .arrow {
+      font-size: 8px;
+      transition: transform 0.15s;
+    }
+
+    .sidebar-section.collapsed .arrow { transform: rotate(-90deg); }
+    .sidebar-section.collapsed .sidebar-section-items { display: none; }
+
+    .sidebar-section-count {
+      margin-left: auto;
+      font-weight: 400;
+      font-size: 10px;
+      opacity: 0.5;
+    }
+
+    .sidebar-section-items { padding: 0 8px 8px; }
+
+    .sidebar-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-family: var(--sys-font);
+      font-size: 13px;
+      padding: 6px 12px;
+      background: none;
+      border: none;
+      border-radius: 4px;
+      color: var(--sys-text);
+      cursor: pointer;
+      transition: all 0.1s;
+      margin-bottom: 1px;
+    }
+
+    .sidebar-item:hover { background: var(--sys-surface-hover); }
+    .sidebar-item.active { background: var(--sys-accent-dim); color: var(--sys-accent); }
+
+    .sidebar-item-desc {
+      font-size: 11px;
+      color: var(--sys-text-dim);
+      margin-top: 1px;
+      line-height: 1.3;
+    }
+
+    /* ---- Content ---- */
+    .content {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      background: var(--color-bg);
+    }
+
+    /* Showcase mode: padded, scrollable */
+    .content-showcase {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 24px 32px;
+    }
+
+    /* Fullscreen mode: fills area, no padding */
+    .content-fullscreen {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .content-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--sys-text-dim);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">UI Design System</div>
+        <div class="sidebar-subtitle">Interactive mockups</div>
+      </div>
+      <div class="sidebar-scroll" id="sidebar-scroll">
+        <!-- Built dynamically from registry -->
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <div class="content-empty">Select an item from the sidebar</div>
+    </div>
+  </div>
+
+  <script src="inspector.js"></script>
+  <script src="scenario-player.js"></script>
+
+  <script type="module">
+    import { registry } from './registry.js';
+
+    // Auto-load all Web Components from registry
+    // (components list their .showcase.js — derive the .js component file from the id)
+    for (const comp of registry.components) {
+      const componentFile = 'Components/' + comp.id + '.js';
+      import('./' + componentFile).catch(() => {
+        // Not every showcase has a matching component file (e.g. composed components
+        // that only combine other components). Silently skip.
+      });
+    }
+
+    const sidebarScroll = document.getElementById('sidebar-scroll');
+    const content = document.getElementById('content');
+    let currentCleanup = null;
+    let activeBtn = null;
+
+    const sectionLabels = {
+      components: 'Components',
+      screens: 'Screens',
+      flows: 'Flows',
+      animations: 'Animations',
+    };
+
+    // Build sidebar from registry
+    for (const [key, items] of Object.entries(registry)) {
+      const section = document.createElement('div');
+      section.className = 'sidebar-section';
+      section.innerHTML = `
+        <button class="sidebar-section-header">
+          <span class="arrow">▼</span>
+          ${sectionLabels[key] || key}
+          <span class="sidebar-section-count">${items.length}</span>
+        </button>
+        <div class="sidebar-section-items"></div>`;
+
+      const header = section.querySelector('.sidebar-section-header');
+      header.onclick = () => section.classList.toggle('collapsed');
+
+      const itemsContainer = section.querySelector('.sidebar-section-items');
+
+      for (const item of items) {
+        const btn = document.createElement('button');
+        btn.className = 'sidebar-item';
+        btn.innerHTML = `${item.name}<div class="sidebar-item-desc">${item.desc}</div>`;
+        btn.onclick = () => loadModule(item, btn);
+        itemsContainer.appendChild(btn);
+      }
+
+      sidebarScroll.appendChild(section);
+    }
+
+    async function loadModule(item, btn) {
+      // Highlight
+      if (activeBtn) activeBtn.classList.remove('active');
+      btn.classList.add('active');
+      activeBtn = btn;
+
+      // Cleanup
+      if (currentCleanup) { currentCleanup(); currentCleanup = null; }
+      document.querySelectorAll('.scenario-controls').forEach(el => el.remove());
+
+      // Create wrapper
+      content.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.className = item.fullscreen ? 'content-fullscreen' : 'content-showcase';
+      content.appendChild(wrapper);
+
+      try {
+        const module = await import('./' + item.module + '?t=' + Date.now());
+        if (module.render) {
+          currentCleanup = module.render(wrapper) || null;
+        }
+      } catch (e) {
+        wrapper.innerHTML = `<div class="content-empty" style="color: var(--color-danger);">Error: ${e.message}</div>`;
+        console.error(e);
+      }
+    }
+  </script>
+</body>
+</html>

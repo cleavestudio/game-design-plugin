@@ -1,0 +1,313 @@
+/* ============================================
+   DESIGN SYSTEM TOOL — Navigation & Catalog UI
+   Neutral dev-tool aesthetic. NOT game-themed.
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --sys-bg: #1a1a2e;
+  --sys-surface: #222240;
+  --sys-surface-hover: #2a2a4a;
+  --sys-border: #333355;
+  --sys-border-hover: #4a4a6a;
+  --sys-text: #b8b8d0;
+  --sys-text-dim: #6e6e8a;
+  --sys-text-bright: #e0e0f0;
+  --sys-accent: #7c6cf0;
+  --sys-accent-dim: rgba(124, 108, 240, 0.12);
+  --sys-danger: #ff4d4f;
+  --sys-font: 'Inter', -apple-system, sans-serif;
+  --sys-font-mono: 'JetBrains Mono', monospace;
+
+  /* Fallback game-theme vars (overridden by common.css when loaded) */
+  --color-bg: #0d1117;
+  --color-danger: #ff4d4f;
+  --sys-radius: 6px;
+  --sys-transition: 0.15s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--sys-bg);
+  color: var(--sys-text);
+  font-family: var(--sys-font);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Header */
+.sys-header {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--sys-border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sys-logo {
+  width: 32px;
+  height: 32px;
+  background: var(--sys-accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  font-weight: 700;
+}
+
+.sys-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sys-text-bright);
+}
+
+.sys-subtitle {
+  font-size: 12px;
+  color: var(--sys-text-dim);
+}
+
+/* Tabs */
+.sys-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--sys-border);
+}
+
+.sys-tab {
+  font-family: var(--sys-font);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--sys-text-dim);
+  cursor: pointer;
+  transition: all var(--sys-transition);
+}
+
+.sys-tab:hover { color: var(--sys-text); }
+
+.sys-tab.active {
+  color: var(--sys-accent);
+  border-bottom-color: var(--sys-accent);
+}
+
+.sys-tab-count {
+  font-size: 11px;
+  color: var(--sys-text-dim);
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+/* Content */
+.sys-content {
+  padding: 24px 32px;
+}
+
+.sys-panel {
+  display: none;
+}
+
+.sys-panel.active {
+  display: block;
+}
+
+/* Card Grid */
+.sys-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.sys-card {
+  background: var(--sys-surface);
+  border: 1px solid var(--sys-border);
+  border-radius: var(--sys-radius);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all var(--sys-transition);
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+
+.sys-card:hover {
+  border-color: var(--sys-border-hover);
+  background: var(--sys-surface-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.sys-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sys-text-bright);
+  margin-bottom: 4px;
+}
+
+.sys-card-desc {
+  font-size: 12px;
+  color: var(--sys-text-dim);
+  line-height: 1.5;
+}
+
+.sys-tag {
+  display: inline-block;
+  font-family: var(--sys-font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 8px;
+  background: var(--sys-accent-dim);
+  color: var(--sys-accent);
+}
+
+/* Back link */
+.sys-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--sys-text-dim);
+  text-decoration: none;
+  padding: 8px 0;
+  transition: color var(--sys-transition);
+}
+
+.sys-back:hover { color: var(--sys-accent); }
+
+/* Section headers (for component catalog pages) */
+.sys-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--sys-text-dim);
+  margin-top: 32px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sys-border);
+}
+
+.sys-showcase {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 16px 0;
+}
+
+.sys-showcase-item {
+  text-align: center;
+}
+
+.sys-showcase-label {
+  font-size: 11px;
+  color: var(--sys-text-dim);
+  margin-top: 8px;
+  font-family: var(--sys-font-mono);
+}
+
+/* ---- Inspector highlight ---- */
+.inspector-highlight {
+  outline: 2px solid var(--sys-accent) !important;
+  outline-offset: 2px;
+}
+
+/* ---- Showcase classes (used by component showcase modules) ---- */
+.sc-title { font-size: 20px; font-weight: 700; color: var(--sys-text-bright); margin-bottom: 4px; }
+.sc-desc { color: var(--sys-text-dim); font-size: 13px; margin-bottom: 24px; }
+.sc-section {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--sys-text-dim); margin-top: 28px; margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--sys-border);
+}
+.sc-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 8px; }
+.sc-col { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+.sc-item { text-align: center; }
+.sc-label { font-size: 11px; color: var(--sys-text-dim); margin-top: 8px; font-family: var(--sys-font-mono); }
+.sc-row-inline { display: flex; align-items: center; gap: 16px; }
+.sc-label-inline { font-size: 11px; color: var(--sys-text-dim); font-family: var(--sys-font-mono); min-width: 60px; }
+
+/* ---- Scenario Player Controls ---- */
+.scenario-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--sys-bg);
+  border-top: 1px solid var(--sys-border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+  font-family: var(--sys-font);
+}
+
+.sc-btn {
+  font-family: var(--sys-font);
+  font-size: 13px;
+  padding: 4px 10px;
+  border: 1px solid var(--sys-border);
+  background: var(--sys-surface);
+  color: var(--sys-text);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.1s;
+  line-height: 1;
+}
+.sc-btn:hover { border-color: var(--sys-accent); color: var(--sys-accent); }
+
+.sc-timeline {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--sys-border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.sc-timeline::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--sys-accent);
+  border-radius: 50%;
+  cursor: grab;
+  box-shadow: 0 0 6px rgba(124, 108, 240, 0.4);
+}
+
+.sc-time {
+  font-family: var(--sys-font-mono);
+  font-size: 11px;
+  color: var(--sys-text-dim);
+  min-width: 90px;
+  text-align: center;
+}
+
+.sc-speed {
+  display: flex;
+  gap: 2px;
+}
+
+.sc-speed-btn {
+  font-family: var(--sys-font-mono);
+  font-size: 10px;
+  padding: 3px 6px;
+  border: 1px solid var(--sys-border);
+  background: var(--sys-surface);
+  color: var(--sys-text-dim);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.1s;
+}
+.sc-speed-btn:hover { color: var(--sys-text); border-color: var(--sys-border-hover); }
+.sc-speed-btn.active { color: var(--sys-accent); border-color: var(--sys-accent); background: var(--sys-accent-dim); }
