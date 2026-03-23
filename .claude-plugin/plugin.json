@@ -1,7 +1,7 @@
 {
   "name": "game-design",
   "description": "Game design studio — 7 specialized agents for mechanics design, lore, UI mockups, audio, visual specs, quality review, and document generation. Includes interactive HTML UI Design System.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "CleaveStudio"
   }
