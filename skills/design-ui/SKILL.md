@@ -1,14 +1,14 @@
 ---
 name: design-ui
-description: Design a game UI screen or component — creates a visual HTML mockup with specification tooltips. Can be used standalone or as part of /game-design.
+description: This skill should be used when the user wants to "design a UI screen", "create a UI component", "make a mockup", "design the HUD", "design an inventory screen", "create a health bar", "design a skill tree", or any other game UI element. Creates visual HTML mockups with specification tooltips using the UI Design System.
 argument-hint: "[screen or component description, e.g. 'inventory screen', 'health bar', 'skill tree']"
 user-invocable: true
-allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
+allowed-tools: Read, LS, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
 ---
 
 # UI Screen/Component Designer
 
-Creates visual HTML mockups for game UI — screens, components, HUD elements. Components and Screens are static visual mockups. Flows add simple navigation between screens (show/hide). The mockup is both a visual layout AND a specification document (every element has tooltip specs on Alt+hover).
+Design visual HTML mockups for game UI — screens, components, HUD elements. Components and Screens are static visual mockups. Flows add simple navigation between screens (show/hide). Every mockup is both a visual layout and a specification document (every element has tooltip specs on Alt+hover).
 
 ## Workflow
 
@@ -16,7 +16,7 @@ Creates visual HTML mockups for game UI — screens, components, HUD elements. C
 
 Read `.claude/project-structure.json`.
 * If it exists — use the `ui` path.
-* If not — tell the user the project needs setup and suggest running `/setup`. Do NOT proceed without it.
+* If not — tell the user the project needs setup and suggest running `/game-design:setup`. Do NOT proceed without it.
 
 ### 2. Parse Request
 
@@ -45,12 +45,12 @@ Launch `ui-designer` agent (Mode B) with:
 
 When done:
 * Tell the user what was created
-* Remind them to open `http://localhost:8080` to see it in the UI Design System (or suggest running `/setup` if the server isn't started)
+* Remind them to open `http://localhost:8080` to see it in the UI Design System (or suggest running `/game-design:setup` if the server isn't started)
 * Ask if they want to design another element or make changes
 
 ## Rules
 
-* Detect the user's language and use it throughout.
+* Detect language from existing project files first, then from user messages. Use it throughout.
 * **NEVER** expose internal names — agent names, STATUS markers, file paths in technical format.
   * Wrong: "I'll launch the ui-designer agent" / "STATUS: READY"
   * Right: "Let me design this..." / "The mockup is ready!"

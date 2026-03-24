@@ -1,14 +1,14 @@
 ---
 name: setup
-description: Initialize the game design plugin — creates project structure, sets up the UI Design System, and starts the dev server. Run once per project, or to reinitialize.
+description: This skill should be used when the user wants to "set up the project", "initialize game design", "run setup", "create the project structure", "reinitialize", or "start the UI server". Initializes directory structure, copies UI Design System infrastructure, and starts the dev server.
 argument-hint: "[no arguments]"
 user-invocable: true
-allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
+allowed-tools: Read, LS, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
 ---
 
 # Plugin Setup
 
-Full initialization of the game design plugin for this project. Handles everything — the user does nothing manually.
+Initialize the game design plugin for this project. Handle everything — the user does nothing manually.
 
 ## Workflow
 
@@ -89,11 +89,9 @@ Write `.claude/project-structure.json` with the resolved paths:
 
 ### 6. Copy UI Infrastructure
 
-Find the plugin's `ui-template/` directory. Use Glob to find `**/ui-template/server.js` — the directory containing it is the template source.
-
-Copy all infrastructure files to `{ui_path}/` using Bash:
+Copy all infrastructure files from the plugin's `ui-template/` directory to `{ui_path}/` using Bash:
 ```bash
-cp {template_dir}/index.html {template_dir}/system.css {template_dir}/inspector.js {template_dir}/scenario-player.js {template_dir}/server.js {template_dir}/utils.js {ui_path}/
+cp ${CLAUDE_PLUGIN_ROOT}/ui-template/index.html ${CLAUDE_PLUGIN_ROOT}/ui-template/system.css ${CLAUDE_PLUGIN_ROOT}/ui-template/inspector.js ${CLAUDE_PLUGIN_ROOT}/ui-template/scenario-player.js ${CLAUDE_PLUGIN_ROOT}/ui-template/server.js ${CLAUDE_PLUGIN_ROOT}/ui-template/utils.js {ui_path}/
 ```
 
 **NEVER overwrite `common.css`** if it already exists — it contains the game's visual tokens. **NEVER overwrite `system.css`** if user has customized the tool theme (check if `--sys-*` values differ from defaults). All other infrastructure files are safe to overwrite on reinit.
@@ -156,8 +154,9 @@ UI Server: http://localhost:8080
 Drafts:    .claude/drafts/
 
 Next steps:
-  /game-design — start designing game mechanics
-  /design-ui   — create a UI component or screen
+  /game-design:game-design   — start designing game mechanics
+  /game-design:design-ui     — create a UI component or screen
+  /game-design:cleanup-drafts — manage draft files
 ```
 
 ## On Reinitialize
@@ -171,7 +170,7 @@ When the project is already set up and user wants to reinit:
 
 ## Rules
 
-* Detect the user's language and use it throughout.
+* Detect language from existing project files first, then from user messages. Use it throughout.
 * **Read first, ask second.** Never ask the user about information that's already in the project documents.
 * **NEVER** move or reorganize files without explicit user approval.
 * **NEVER** expose internal details. Say "Setting up the project..." not "Copying ui-template/inspector.js to GDD/UI/"

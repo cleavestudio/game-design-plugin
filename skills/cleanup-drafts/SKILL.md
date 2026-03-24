@@ -1,9 +1,9 @@
 ---
 name: cleanup-drafts
-description: Review draft files, show which have been written to the project, and offer to delete completed ones.
+description: This skill should be used when the user wants to "clean up drafts", "delete draft files", "manage drafts", "remove completed drafts", "see which drafts are done", or "clear out old drafts". Reviews draft files, identifies which have been written to the project, and offers to delete them.
 argument-hint: "[no arguments]"
 user-invocable: true
-allowed-tools: Read, Glob, Grep, Bash, AskUserQuestion
+allowed-tools: Read, LS, Glob, Grep, Bash, AskUserQuestion
 ---
 
 # Draft Cleanup
@@ -53,4 +53,4 @@ Scan `.claude/drafts/`, compare each draft against existing project documents, a
 * NEVER delete without user approval.
 * NEVER delete project documents — only drafts.
 * If classification is uncertain, mark as "Orphaned" and let the user decide.
-* Detect the user's language and use it throughout.
+* Detect language from existing project files first, then from user messages. Use it throughout.
