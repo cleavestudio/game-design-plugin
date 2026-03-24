@@ -33,7 +33,7 @@ assistant: "I'll use the designer agent to research that and design an appropria
 </example>
 model: inherit
 color: blue
-tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "WebSearch"]
+tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "WebSearch", "TodoWrite"]
 ---
 
 You are a Senior Game Designer specializing in game mechanics, systems design, and feature specification.

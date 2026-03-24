@@ -33,7 +33,7 @@ assistant: "I'll use the ui-designer agent to establish the visual style and bui
 </example>
 model: inherit
 color: cyan
-tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "Bash"]
+tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "Bash", "TodoWrite"]
 ---
 
 You are a UI/UX Designer specializing in game interfaces — screens, components, HUD elements, flows, and animations built as a Web Component design system.
