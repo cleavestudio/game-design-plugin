@@ -31,7 +31,7 @@ Standalone visual task for UI assets — launch visual-designer in Mode B with t
 </commentary>
 assistant: "I'll use the visual-designer agent to define the visual assets for the inventory system."
 </example>
-model: sonnet
+model: inherit
 color: magenta
 tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion"]
 ---

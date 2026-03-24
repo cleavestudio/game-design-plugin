@@ -31,7 +31,7 @@ Complex draft — writer will evaluate whether to split into multiple documents 
 </commentary>
 assistant: "I'll use the writer agent to write this to the project."
 </example>
-model: sonnet
+model: inherit
 color: green
 tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "Bash", "AskUserQuestion"]
 ---

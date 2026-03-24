@@ -31,7 +31,7 @@ Reference-based design task — designer has WebSearch for verifying specific ga
 </commentary>
 assistant: "I'll use the designer agent to research that and design an appropriate system."
 </example>
-model: opus
+model: inherit
 color: blue
 tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "WebSearch"]
 ---

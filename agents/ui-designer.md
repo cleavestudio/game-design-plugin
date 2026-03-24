@@ -31,7 +31,7 @@ First UI task — ui-designer will run Mode C first to create common.css, then p
 </commentary>
 assistant: "I'll use the ui-designer agent to establish the visual style and build the main menu."
 </example>
-model: sonnet
+model: inherit
 color: cyan
 tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "Bash"]
 ---

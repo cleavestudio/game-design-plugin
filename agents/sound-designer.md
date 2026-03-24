@@ -31,7 +31,7 @@ Standalone ambient design task — launch sound-designer in Mode B with the requ
 </commentary>
 assistant: "I'll use the sound-designer agent to spec the ambient layer system for the forest zone."
 </example>
-model: sonnet
+model: inherit
 color: yellow
 tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion"]
 ---

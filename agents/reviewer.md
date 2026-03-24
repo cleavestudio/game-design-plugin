@@ -31,7 +31,7 @@ Full draft assembled with specialist sections — run reviewer before the write 
 </commentary>
 assistant: "I'll use the reviewer agent to validate the complete draft."
 </example>
-model: opus
+model: inherit
 color: red
 tools: ["Read", "LS", "Glob", "Grep"]
 ---
