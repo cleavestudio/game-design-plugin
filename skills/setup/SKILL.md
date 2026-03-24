@@ -73,7 +73,12 @@ mkdir -p {root}/Design {root}/Lore {root}/UI
 mkdir -p .claude/drafts
 ```
 
-The UI internal structure (Components/, Screens/, etc.) is managed by the ui-designer agent — do NOT create subdirectories here.
+Create the `References/` directory inside the UI path — it holds the design tokens reference page:
+```bash
+mkdir -p {ui_path}/References
+```
+
+The rest of the UI internal structure (Components/, Screens/, etc.) is managed by the ui-designer agent — do NOT create those subdirectories here.
 
 ### 5. Save Project Structure Config
 

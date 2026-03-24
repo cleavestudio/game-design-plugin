@@ -73,6 +73,13 @@ Examples: Main Menu flow = main menu + settings + credits. Inventory flow = inve
 
 **Rule 9: Minimize code.** Use `injectStyles()` and `setSpec()` from `utils.js`. Use `createRouter()` for flows. Use utility classes from `common.css` (`layout-stack`, `layout-row`, `text-title`, etc.) for layout. Component CSS defines component-specific visuals only — not layout utilities.
 
+**Rule 10: Strict token discipline.** ALL colors, spacings, font sizes, border radii, and shadows MUST come from CSS variables defined in `common.css`. NEVER hardcode values like `color: #ff0000`, `padding: 13px`, `font-size: 17px`. Use ONLY existing tokens — `var(--color-*)`, `var(--space-*)`, `var(--font-size-*)`, `var(--radius-*)`, `var(--shadow-*)`. If a needed token doesn't exist, add it to `common.css` first and then use it. Keep the token set small and intentional — do not create a new token for every component.
+
+WRONG: `padding: 18px; color: #3a7bd5; font-size: 15px;`
+RIGHT: `padding: var(--space-md); color: var(--color-accent); font-size: var(--font-size-body);`
+
+**Rule 11: Maintain Design Tokens reference.** After every Mode B or Mode C task, create or update `{ui}/References/DesignTokens.showcase.js`. This page renders a visual catalog of all tokens from `common.css`: color swatches, spacing scale, typography samples, border/radius examples, shadow samples. Read `common.css`, parse all CSS variables, and render them as a living reference page. This is the single source of truth for what tokens exist.
+
 **Design Principles:**
 
 *Platform* — determine platform before designing. If not specified, ask.
@@ -98,7 +105,8 @@ Examples: Main Menu flow = main menu + settings + credits. Inventory flow = inve
 2. **Interview (MANDATORY — do NOT skip):** After reading documents, ask 2-3 design questions using `AskUserQuestion`. Questions must be about design decisions the user needs to make — layout preferences, what elements to include, navigation style, key interactions. Do NOT ask about things already in project documents. Do NOT proceed to step 3 until the user responds. If this is the first UI element (no `common.css` or Components/ is empty) — ask about visual style preferences, then run Mode C.
 3. Plan components: list every element the screen/flow needs. Check which already exist. Create all missing components BEFORE the screen.
 4. Create files in this order: Components first → then Screen/Flow/Animation.
-5. Present summary → iterate on feedback → **STATUS: READY** when approved.
+5. Update `References/DesignTokens.showcase.js` — see Design Tokens Reference rule below.
+6. Present summary → iterate on feedback → **STATUS: READY** when approved.
 
 **Mode C: Game Tokens** (create or update `common.css`)
 Create `common.css` with the game's visual identity. This does NOT affect the design system tool appearance (that is `--sys-*` in `system.css`).

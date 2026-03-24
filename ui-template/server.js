@@ -66,7 +66,19 @@ function buildRegistry() {
     return { id, name: camelToSpaced(id), desc: '', module: 'Animations/' + f, fullscreen: true };
   });
 
-  return { components, screens, flows, animations };
+  const references = scanDir('References')
+    .filter(f => f.endsWith('.showcase.js'))
+    .map(f => {
+      const id = f.replace('.showcase.js', '');
+      return {
+        id,
+        name: camelToSpaced(id),
+        desc: extractDesc(path.join(ROOT, 'References', f)),
+        module: 'References/' + f,
+      };
+    });
+
+  return { references, components, screens, flows, animations };
 }
 
 const server = http.createServer((req, res) => {
