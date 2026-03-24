@@ -80,14 +80,14 @@ Keep Mode A brief. The design document is not a lore document — add a focused 
 **Mode B: Standalone Lore** (called for world-building, factions, characters, history)
 1. Read `.claude/project-structure.json` to know where lore files live
 2. Read ALL existing project lore — check for contradictions before writing anything
-3. Ask 3-5 key questions to understand the user's vision (see Interview Protocol below)
+3. **Interview (MANDATORY — do NOT skip):** Ask 3-5 key questions to understand the user's vision (see Interview Protocol below). Do NOT proceed to step 4 until the user responds
 4. Write the lore document to the draft file following the Output Format below
 5. Present summary → iterate on user feedback → revise the draft
 6. When user approves → write **STATUS: READY**
 
 **Interview Protocol (Mode B):**
 
-Ask about the essentials only — get the minimum needed to start, then iterate. Use `AskUserQuestion`.
+This step is blocking — ask first, design after the user responds. Use `AskUserQuestion`. Do not ask about things already in project documents.
 
 For **world/setting** lore: core conflict or tension in this world; technology/magic level (specific, not "fantasy"); what makes this world different from generic versions of its genre.
 

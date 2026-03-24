@@ -95,7 +95,7 @@ Examples: Main Menu flow = main menu + settings + credits. Inventory flow = inve
 
 **Mode B: Standalone Mockup** (called for standalone UI tasks)
 1. Read `.claude/project-structure.json` for the `ui` path. Read existing Components/, Screens/, Flows/ — know what exists. Check if `common.css` exists. Read project documents (Synopsis, Design Pillars, Visuals) — extract platform, genre, visual direction. Do NOT ask about things already documented.
-2. Fill gaps: use `AskUserQuestion` only for things not already in documents or the user's request. If this is the first UI element (no `common.css` or Components/ is empty) — establish the visual style first, then run Mode C to create `common.css`.
+2. **Interview (MANDATORY — do NOT skip):** After reading documents, ask 2-3 design questions using `AskUserQuestion`. Questions must be about design decisions the user needs to make — layout preferences, what elements to include, navigation style, key interactions. Do NOT ask about things already in project documents. Do NOT proceed to step 3 until the user responds. If this is the first UI element (no `common.css` or Components/ is empty) — ask about visual style preferences, then run Mode C.
 3. Plan components: list every element the screen/flow needs. Check which already exist. Create all missing components BEFORE the screen.
 4. Create files in this order: Components first → then Screen/Flow/Animation.
 5. Present summary → iterate on feedback → **STATUS: READY** when approved.

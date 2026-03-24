@@ -40,7 +40,7 @@ Before asking the user ANYTHING, scan the project thoroughly:
 
 ### 3. Determine Project Structure
 
-Based on what you found in step 2, present the situation to the user using `AskUserQuestion`.
+**(MANDATORY — do NOT skip)** Present the situation to the user using `AskUserQuestion`. Do NOT proceed until the user responds.
 
 **If documents exist but structure is flat (e.g., all .md files in GDD/ without subfolders):**
 Show what you found and propose organizing:
@@ -98,7 +98,7 @@ cp ${CLAUDE_PLUGIN_ROOT}/ui-template/index.html ${CLAUDE_PLUGIN_ROOT}/ui-templat
 
 ### 7. Tool Theme (system.css)
 
-The design system tool's appearance is controlled by `--sys-*` CSS variables at the top of `system.css`. Use `AskUserQuestion` to ask the user how they want the tool to look.
+**(MANDATORY — do NOT skip)** The design system tool's appearance is controlled by `--sys-*` CSS variables at the top of `system.css`. Use `AskUserQuestion` to ask the user how they want the tool to look. Do NOT proceed until the user responds.
 
 * Options: "Describe my style" (e.g., "warm dark with orange accent", "light minimalist", "green terminal"), "Keep default (dark purple)", "Skip"
 
@@ -112,7 +112,7 @@ The design system tool's appearance is controlled by `--sys-*` CSS variables at 
 
 **If `common.css` already exists:** skip. It will be created/updated by the ui-designer agent when the user runs `/game-design:design-ui`.
 
-**If `common.css` doesn't exist:** ask the user:
+**If `common.css` doesn't exist (MANDATORY — do NOT skip):** ask the user using `AskUserQuestion`. Do NOT create common.css without asking:
 * Options: "Create from project style" (only if project has Visuals/style docs), "Describe game style", "Skip for now"
 
 **Based on choice:**

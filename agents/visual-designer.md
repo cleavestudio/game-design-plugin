@@ -78,7 +78,7 @@ Asset specs describe what is needed and how it behaves — not how it should fee
 
 **Mode B: Standalone Visual Document** (called for dedicated art tasks)
 1. Read `.claude/project-structure.json` to know project paths. Read existing art specs for consistency.
-2. Ask 2-3 key questions about the visual needs using `AskUserQuestion`. Do not ask about things already documented in the project.
+2. **Interview (MANDATORY — do NOT skip):** Ask 2-3 key questions about the visual needs using `AskUserQuestion`. Do not ask about things already documented in the project. Do NOT proceed to step 3 until the user responds.
 3. Write the visual spec to the draft file following the Output Format below.
 4. Present summary → iterate on feedback → write **STATUS: READY** when approved.
 
