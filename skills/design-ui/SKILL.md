@@ -21,10 +21,10 @@ Read `.claude/project-structure.json`.
 ### 2. Parse Request
 
 The user provides a screen or component description. Examples:
-* `/design-ui inventory screen`
-* `/design-ui monster card component`
-* `/design-ui main HUD`
-* `/design-ui skill tree`
+* `/game-design:design-ui inventory screen`
+* `/game-design:design-ui monster card component`
+* `/game-design:design-ui main HUD`
+* `/game-design:design-ui skill tree`
 
 If no argument provided, ask: "What UI element do you want to design?"
 

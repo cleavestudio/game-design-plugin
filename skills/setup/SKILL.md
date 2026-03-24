@@ -110,7 +110,7 @@ The design system tool's appearance is controlled by `--sys-*` CSS variables at 
 
 `common.css` defines the game's visual identity — colors, fonts, spacing used by UI mockups. It is separate from the tool theme.
 
-**If `common.css` already exists:** skip. It will be created/updated by the ui-designer agent when the user runs `/design-ui`.
+**If `common.css` already exists:** skip. It will be created/updated by the ui-designer agent when the user runs `/game-design:design-ui`.
 
 **If `common.css` doesn't exist:** ask the user:
 * Options: "Create from project style" (only if project has Visuals/style docs), "Describe game style", "Skip for now"
@@ -118,7 +118,7 @@ The design system tool's appearance is controlled by `--sys-*` CSS variables at 
 **Based on choice:**
 * **Create from project style** — Launch `ui-designer` agent in **Mode C** with the task: "Mode C: Create {ui_path}/common.css". Pass the full text of Visuals/Synopsis documents and a concrete style summary (genre, platform, setting, visual direction).
 * **Describe game style** — ask the user for platform and style description. Launch `ui-designer` in **Mode C** with: "Mode C: Create {ui_path}/common.css. Platform: {platform}. Style: {description}."
-* **Skip** — do nothing. common.css will be created later when the user first runs `/design-ui`.
+* **Skip** — do nothing. common.css will be created later when the user first runs `/game-design:design-ui`.
 
 ### 8. Check Node.js
 
@@ -154,7 +154,7 @@ UI Server: http://localhost:8080
 Drafts:    .claude/drafts/
 
 Next steps:
-  /game-design:game-design   — start designing game mechanics
+  Start designing — just describe what you want to design
   /game-design:design-ui     — create a UI component or screen
   /game-design:cleanup-drafts — manage draft files
 ```

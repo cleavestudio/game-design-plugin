@@ -32,7 +32,7 @@ World rules / magic system task — launch lorekeeper in Mode B.
 assistant: "I'll use the lorekeeper agent to spec out the magic system as a lore document."
 </example>
 model: sonnet
-color: purple
+color: magenta
 tools: ["Read", "LS", "Glob", "Grep", "Write", "Edit", "AskUserQuestion", "WebSearch"]
 ---
 
