@@ -53,7 +53,7 @@ If the draft has gaps or issues — write what you can. DO NOT INVENT ANYTHING. 
 
 **Writing Process:**
 1. **Read project structure:** Read `.claude/project-structure.json` to know where to write files (design path, lore path, UI path). All output files MUST go to the paths defined in this config.
-2. **Analyze draft:** Read the draft file completely to understand what needs to be created or modified.
+2. **Analyze draft:** Receive a draft path — may be a single file or a directory with multiple draft files. If a directory: list and read all files inside. Treat all files together as one cohesive design to be assembled into project documents.
 3. **Explore target directories:** Check existing files in the target directories to understand current structure and identify documents that may need updates or cross-references.
 4. **Decide structure:** Determine whether the draft maps to one document or should be split (see Document Rules below).
 5. **Write:** Create new documents or modify existing ones. Design docs → `design` path. Lore → `lore` path. Add cross-references between related documents.

@@ -47,10 +47,10 @@ These are not routed — they indicate phase completion:
 
 ## Draft Management
 
-* Each feature or lore topic gets its **own draft file** in `.claude/drafts/`.
-* Generate a short descriptive filename from the topic (e.g., `.claude/drafts/combat-system.md`, `.claude/drafts/faction-varn.md`).
-* One draft = one design or lore document. If a design has sub-systems, they live in the same draft as sections.
-* When the user changes topic, create a **new draft** for the new topic.
+* **Design tasks** get a **draft directory** in `.claude/drafts/` (e.g., `.claude/drafts/combat-system/`). The designer creates multiple focused draft files inside it as the design progresses iteratively.
+* **Lore tasks** get a **single draft file** in `.claude/drafts/` (e.g., `.claude/drafts/faction-varn.md`).
+* Generate a short descriptive name from the topic.
+* When the user changes topic, create a **new draft directory/file** for the new topic.
 
 ## Project Structure Check
 
@@ -73,25 +73,25 @@ A session can contain **multiple design/lore cycles**. The user may jump between
 Use this when the user wants to design a game mechanic, system, or feature.
 
 ```
-Phase 1: Design
-  → Launch designer with request + draft file path
+Phase 1: Design (iterative)
+  → Launch designer with request + draft directory path
+  → Designer works iteratively: breaks the task into parts, discusses each with the user, writes focused draft files
   → Relay user ↔ designer (resume pattern)
   → Until: STATUS: READY
 
 Phase 1.5: Enrichment (automatic, if designer sends signals)
-  → Route each signal to the appropriate specialist agent (lorekeeper, ui-designer, sound-designer, visual-designer) with draft file path + signal text
-  → Each specialist works in Mode A (enrichment): adds their section to the draft
+  → Route each signal to the appropriate specialist agent with draft directory path + signal text
+  → Each specialist writes their section as a file in the draft directory
   → Until: all specialists signal STATUS: READY
-  → If any specialist signals back (e.g., needs design clarification) → route accordingly
   → Multiple specialists can be launched in parallel if signals are independent
 
 Phase 2: Review
-  → Launch reviewer with draft file path
+  → Launch reviewer with draft directory path
   → If PASS → Phase 3
   → If ISSUES FOUND → present to user → fix (resume designer) or skip
 
 Phase 3: Write
-  → Launch writer with draft file path
+  → Launch writer with draft directory path
   → Present summary. Topic done.
 ```
 

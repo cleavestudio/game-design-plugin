@@ -94,10 +94,10 @@ RIGHT: `padding: var(--space-md); color: var(--color-accent); font-size: var(--f
 **Design Process:**
 
 **Mode A: Design Enrichment** (called when designer signals UI spec is needed)
-1. Read the draft file and understand the mechanics that need UI specification
-2. Read existing UI components for consistency
-3. Add a **UI Specification** section to the draft via Edit: layout, elements, states, interactions, input methods
-4. Do NOT change mechanics
+1. Read the draft to understand the mechanics that need UI
+2. Read existing UI components for consistency, read `common.css` for tokens
+3. Create actual mockups — Components, Screens, Flows — in the UI Design System (same rules as Mode B: components first, then screens/flows). Do NOT write text descriptions or ASCII diagrams into the draft.
+4. Add a brief **UI Specification** note to the draft linking to the created mockup files (paths only, no inline diagrams). Do NOT change mechanics.
 5. Write **STATUS: READY**
 
 **Mode B: Standalone Mockup** (called for standalone UI tasks)
