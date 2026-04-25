@@ -47,10 +47,14 @@ These are not routed — they indicate phase completion:
 
 ## Draft Management
 
-* **Design tasks** get a **draft directory** in `.claude/drafts/` (e.g., `.claude/drafts/combat-system/`). The designer creates multiple focused draft files inside it as the design progresses iteratively.
-* **Lore tasks** get a **single draft file** in `.claude/drafts/` (e.g., `.claude/drafts/faction-varn.md`).
+* Drafts live in the project's `drafts` folder (read the path from `.claude/project-structure.json` — field `drafts`). Drafts are visible to the user — they should be able to read and edit them directly.
+* If `project-structure.json` has no `drafts` field (old setup), default to `{root}/Drafts/` (or `Drafts/` if root is empty), create the folder if missing, and add the field to the config.
+* **Design tasks** get a **draft directory** inside the drafts folder (e.g., `{drafts}/combat-system/`). The designer creates multiple focused draft files inside it as the design progresses iteratively, block by block.
+* **Standalone specialist tasks** (lore / audio / visual) get a **single draft file** inside the drafts folder (e.g., `{drafts}/faction-varn.md`).
 * Generate a short descriptive name from the topic.
-* When the user changes topic, create a **new draft directory/file** for the new topic.
+* A draft is a **living, iterative workspace** — drafts are scoped to the user's actual request, not to a "complete feature spec". Short focused drafts are normal and good.
+* If the user expands the topic significantly mid-session, ask whether to keep growing the same draft or start a new one.
+* When the user clearly changes topic, create a **new draft directory/file** for the new topic.
 
 ## Project Structure Check
 
@@ -70,48 +74,74 @@ A session can contain **multiple design/lore cycles**. The user may jump between
 
 ### Cycle A: Design Task
 
-Use this when the user wants to design a game mechanic, system, or feature.
+Use this when the user wants to think through, design, or explore any game-design topic — a role, a mechanic, a system, a feature. The designer works **iteratively, block by block**, syncing with the user after each block. A "design task" can be as small as "help me think through the role of X" — it does NOT have to be a full feature spec.
 
 ```
-Phase 1: Design (iterative)
-  → Launch designer with request + draft directory path
-  → Designer works iteratively: breaks the task into parts, discusses each with the user, writes focused draft files
-  → Relay user ↔ designer (resume pattern)
-  → Until: STATUS: READY
+Phase 1: Design (iterative, block by block)
+  → Launch designer with the user's request + draft directory path (from project-structure.json `drafts` field)
+  → Designer proposes ONE small block at a time, syncs with the user, then waits
+  → Relay user ↔ designer (resume pattern) for as many turns as the user wants
+  → Until: STATUS: READY (the user explicitly says they're satisfied)
 
-Phase 1.5: Enrichment (automatic, if designer sends signals)
-  → Route each signal to the appropriate specialist agent with draft directory path + signal text
-  → Each specialist writes their section as a file in the draft directory
+Phase 1.5: Enrichment (only if designer signals at the end)
+  → If the designer raised SIGNALs alongside STATUS: READY, route each to the appropriate specialist with draft directory path + signal text
+  → Each specialist works in Mode A (compact, single-pass): adds their section/files to the draft
   → Until: all specialists signal STATUS: READY
-  → Multiple specialists can be launched in parallel if signals are independent
+  → If any specialist signals back (e.g. needs design clarification) → route accordingly
+  → Multiple specialists can run in parallel if signals are independent
+  → If the designer raised no signals, skip this phase entirely
 
 Phase 2: Review
   → Launch reviewer with draft directory path
-  → If PASS → Phase 3
+  → If PASS → Phase 2.5
   → If ISSUES FOUND → present to user → fix (resume designer) or skip
 
+Phase 2.5: Choose finalization
+  → Ask the user (AskUserQuestion is fine), with three options:
+      A. "Full feature document" — apply the structured feature template, move to project
+      B. "Concept notes in project" — preserve the draft's organic structure, move to project
+      C. "Keep as draft only" — leave the draft in the drafts folder, don't move to project
+  → A → Phase 3 with writer in FEATURE mode
+  → B → Phase 3 with writer in NOTES mode
+  → C → done. Draft stays in drafts/.
+  → Skip the prompt only if the request was obviously one of these from the start (e.g. "let's design a full feature for X" → A; "just help me think through X" → C).
+
 Phase 3: Write
-  → Launch writer with draft directory path
+  → Launch writer with: draft directory path + chosen mode (FEATURE or NOTES)
   → Present summary. Topic done.
 ```
 
 ### Cycle B: Standalone Specialist Task
 
-Use this when the user's request is purely about one domain with no mechanical design: lore, UI, audio, or visual assets.
+Use this when the user's request is purely about one domain with no mechanical design: lore, UI, audio, or visual assets. The specialist works **iteratively, block by block** (or for ui-designer Mode B — solving the requested element), syncing with the user.
 
 ```
-Phase 1: Specialist Work
+Phase 1: Specialist Work (iterative)
   → Identify the right agent: lorekeeper (lore), ui-designer (UI), sound-designer (audio), visual-designer (art/VFX)
-  → Launch specialist (Mode B) with request + draft file path
+  → Launch specialist (Mode B) with request + draft file path (from project-structure.json `drafts` field)
+  → For lorekeeper / sound-designer / visual-designer: ONE block at a time with sync
+  → For ui-designer: build what the user asked for (don't dump 12 components if they asked for one)
   → Relay user ↔ specialist (resume pattern)
   → Until: STATUS: READY
   → If specialist signals a need for another domain → route accordingly
 
+Phase 1.5: Choose finalization
+  → ui-designer Mode B writes mockup files directly into the UI folder → skip this phase entirely for ui-designer Mode B
+  → For lorekeeper / sound-designer / visual-designer in Mode B, ask the user (AskUserQuestion is fine), with two options:
+      A. "Move to project documents" — preserve the draft's structure (which the specialist's guideposts already shaped), move to the appropriate project folder (lore / audio specs / visual specs)
+      B. "Keep as draft only" — leave the draft in drafts/, don't move to project
+  → A → Phase 2 with writer in NOTES mode (the specialist already gave the draft its shape; writer doesn't impose a different structure)
+  → B → done. Draft stays in drafts/.
+  → Skip the prompt only if the request was obviously one or the other from the start
+
 Phase 2: Write
   → Skip review (no mechanical design to validate)
-  → Launch writer with draft file path
+  → Launch writer with: draft file path + NOTES mode
+  → For ui-designer Mode B, no writer step is needed — files are already in the UI folder
   → Present summary. Topic done.
 ```
+
+**Important:** the user may also choose to stop earlier — they may just want exploratory thinking captured in the draft. Respect that. Drafts live in the project's `drafts/` folder so the user can revisit them later.
 
 ### Cross-Agent Routing
 

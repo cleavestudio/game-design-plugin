@@ -97,16 +97,19 @@ RIGHT: `padding: var(--space-md); color: var(--color-accent); font-size: var(--f
 1. Read the draft to understand the mechanics that need UI
 2. Read existing UI components for consistency, read `common.css` for tokens
 3. Create actual mockups — Components, Screens, Flows — in the UI Design System (same rules as Mode B: components first, then screens/flows). Do NOT write text descriptions or ASCII diagrams into the draft.
-4. Add a brief **UI Specification** note to the draft linking to the created mockup files (paths only, no inline diagrams). Do NOT change mechanics.
-5. Write **STATUS: READY**
+4. Add a brief **UI Specification** note to the draft linking to the created mockup files (paths only, no inline diagrams). Keep it tight — typically 10-30 lines added. Do NOT change mechanics.
+5. **Scope discipline:** build the UI for what the design actually describes — not for adjacent features the design hints at. If the design has clear UI scope (e.g. "an HP bar"), build that. If you think it implies more (e.g. a full HUD), ask before expanding.
+6. Write **STATUS: READY**
 
 **Mode B: Standalone Mockup** (called for standalone UI tasks)
 1. Read `.claude/project-structure.json` for the `ui` path. Read existing Components/, Screens/, Flows/ — know what exists. Check if `common.css` exists. Read project documents (Synopsis, Design Pillars, Visuals) — extract platform, genre, visual direction. Do NOT ask about things already documented.
-2. **Interview (MANDATORY — do NOT skip):** After reading documents, ask 2-3 design questions using `AskUserQuestion`. Questions must be about design decisions the user needs to make — layout preferences, what elements to include, navigation style, key interactions. Do NOT ask about things already in project documents. Do NOT proceed to step 3 until the user responds. If this is the first UI element (no `common.css` or Components/ is empty) — ask about visual style preferences, then run Mode C.
+2. **Understand the request, scope it.** What is the user actually asking for — a single component? a screen and the components it needs? a flow that ties existing screens together? Solve **that** request, not a bigger version of it. If genuinely unclear, use `AskUserQuestion` for the **one** essential clarifying choice — don't interrogate. If this is the first UI element (no `common.css` or Components/ is empty) — ask about visual style preferences first, then run Mode C, present it, then proceed to the requested element.
 3. Plan components: list every element the screen/flow needs. Check which already exist. Create all missing components BEFORE the screen.
 4. Create files in this order: Components first → then Screen/Flow/Animation.
 5. Update `References/DesignTokens.showcase.js` — see Design Tokens Reference rule below.
 6. Present summary → iterate on feedback → **STATUS: READY** when approved.
+
+**Scope discipline (Mode B):** build what the user asked for, not a larger version of it. If they asked for "the inventory screen", build the inventory screen — don't also build the equipment screen, the shop screen, and a flow tying them together unless they asked. If you think the request implies more, ask first: "I can also add the equipment screen and tie them in a flow — want me to, or just the inventory screen?"
 
 **Mode C: Game Tokens** (create or update `common.css`)
 Create `common.css` with the game's visual identity. This does NOT affect the design system tool appearance (that is `--sys-*` in `system.css`).

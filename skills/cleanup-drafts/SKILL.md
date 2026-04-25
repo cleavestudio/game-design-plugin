@@ -8,17 +8,17 @@ allowed-tools: Read, LS, Glob, Grep, Bash, AskUserQuestion
 
 # Draft Cleanup
 
-Scan `.claude/drafts/`, compare each draft against existing project documents, and let the user decide what to delete.
+Scan the project's `drafts/` folder, compare each draft (file or directory) against existing project documents, and let the user decide what to delete.
 
 ## Workflow
 
-1. **Read project structure:** Read `.claude/project-structure.json` to know where project documents live (design, lore, UI paths).
+1. **Read project structure:** Read `.claude/project-structure.json` to know where drafts and project documents live (`drafts`, `design`, `lore`, `ui` paths). If `drafts` is missing from the config, default to `{root}/Drafts/` (or `Drafts/` if root is empty).
 
-2. **Scan drafts:** Glob `.claude/drafts/*.md` to find all draft files.
-   * If no drafts found — tell the user and exit.
+2. **Scan drafts:** Glob `{drafts}/*.md` for single-file drafts and `{drafts}/*/` for design draft directories.
+   * If nothing found — tell the user and exit.
 
-3. **For each draft:**
-   * Read the first few lines to understand the topic (title, overview).
+3. **For each draft (file or directory):**
+   * Read the first few lines / file list to understand the topic.
    * Search the project document directories (from project-structure.json) for a corresponding document — Grep for key terms from the draft's title/overview.
    * Classify:
      * **Written** — a matching project document exists with the same content.
@@ -27,17 +27,17 @@ Scan `.claude/drafts/`, compare each draft against existing project documents, a
 
 4. **Present summary to user:**
    ```
-   Draft files found: N
+   Drafts found: N
 
    Written (safe to delete):
-   - .claude/drafts/combat-system.md → design/combat-system.md
-   - .claude/drafts/faction-varn.md → lore/factions/varn.md
+   - {drafts}/combat-system/ → design/combat-system.md
+   - {drafts}/faction-varn.md → lore/factions/varn.md
 
    Outdated (project doc exists but differs):
-   - .claude/drafts/inventory.md → design/inventory.md (draft is older)
+   - {drafts}/inventory.md → design/inventory.md (draft is older)
 
    Orphaned (no matching project doc):
-   - .claude/drafts/stealth-prototype.md
+   - {drafts}/stealth-prototype.md
    ```
 
 5. **Ask user what to delete** using `AskUserQuestion`:

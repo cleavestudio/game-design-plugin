@@ -66,12 +66,13 @@ Accept them. Map to required categories.
 Based on user's choice:
 * Create directories that don't exist
 * Move files if user approved reorganization
-* Create `.claude/drafts/`
+* Create the `Drafts/` folder inside the project (visible to the user, NOT inside `.claude/`) — drafts are work-in-progress documents the user should be able to read and edit directly
 
 ```bash
-mkdir -p {root}/Design {root}/Lore {root}/UI
-mkdir -p .claude/drafts
+mkdir -p {root}/Design {root}/Lore {root}/UI {root}/Drafts
 ```
+
+If `{root}` is empty (project root has no wrapping folder), create the folders directly at the workspace root: `mkdir -p Design Lore UI Drafts`.
 
 Create the `References/` directory inside the UI path — it holds the design tokens reference page:
 ```bash
@@ -88,9 +89,14 @@ Write `.claude/project-structure.json` with the resolved paths:
   "root": "GDD",
   "design": "GDD/Design",
   "lore": "GDD/Lore",
-  "ui": "GDD/UI"
+  "ui": "GDD/UI",
+  "drafts": "GDD/Drafts"
 }
 ```
+
+If `root` is empty, the paths are just the folder names (e.g. `"drafts": "Drafts"`).
+
+**Migration note:** if `project-structure.json` already exists but has no `drafts` field (old setup), add it on reinit. Default to `{root}/Drafts` (or `Drafts` if root is empty). If a `Drafts/` folder already exists in the project, use it; if not, create it.
 
 ### 6. Copy UI Infrastructure
 
@@ -154,9 +160,9 @@ Project structure: {root}/
   Design/  — game design documents
   Lore/    — lore documents
   UI/      — UI Design System
+  Drafts/  — work-in-progress drafts (you can read/edit these too)
 
 UI Server: http://localhost:8080
-Drafts:    .claude/drafts/
 
 Next steps:
   Start designing — just describe what you want to design
