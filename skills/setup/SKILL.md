@@ -100,9 +100,10 @@ If `root` is empty, the paths are just the folder names (e.g. `"drafts": "Drafts
 
 ### 6. Copy UI Infrastructure
 
-Copy all infrastructure files from the plugin's `ui-template/` directory to `{ui_path}/` using Bash:
+Copy all infrastructure files from the plugin's `ui-template/` directory to `{ui_path}/` using Bash, then make the shell launcher executable:
 ```bash
-cp ${CLAUDE_PLUGIN_ROOT}/ui-template/index.html ${CLAUDE_PLUGIN_ROOT}/ui-template/system.css ${CLAUDE_PLUGIN_ROOT}/ui-template/inspector.js ${CLAUDE_PLUGIN_ROOT}/ui-template/scenario-player.js ${CLAUDE_PLUGIN_ROOT}/ui-template/server.js ${CLAUDE_PLUGIN_ROOT}/ui-template/utils.js {ui_path}/
+cp ${CLAUDE_PLUGIN_ROOT}/ui-template/index.html ${CLAUDE_PLUGIN_ROOT}/ui-template/system.css ${CLAUDE_PLUGIN_ROOT}/ui-template/inspector.js ${CLAUDE_PLUGIN_ROOT}/ui-template/scenario-player.js ${CLAUDE_PLUGIN_ROOT}/ui-template/server.js ${CLAUDE_PLUGIN_ROOT}/ui-template/utils.js ${CLAUDE_PLUGIN_ROOT}/ui-template/start.js ${CLAUDE_PLUGIN_ROOT}/ui-template/start.sh ${CLAUDE_PLUGIN_ROOT}/ui-template/start.bat {ui_path}/
+chmod +x {ui_path}/start.sh {ui_path}/start.js
 ```
 
 **NEVER overwrite `common.css`** if it already exists — it contains the game's visual tokens. **NEVER overwrite `system.css`** if user has customized the tool theme (check if `--sys-*` values differ from defaults). All other infrastructure files are safe to overwrite on reinit.
@@ -141,12 +142,17 @@ If not available — warn that the UI Design System dev server requires Node.js.
 
 ### 9. Start UI Server
 
-If Node.js is available:
+If Node.js is available, launch the server in the background via the cross-platform launcher (PID file + log file, with `start` / `stop` / `status` / `restart` commands):
 ```bash
-cd {ui_path} && node server.js &
+cd {ui_path} && sh start.sh
 ```
 
-Tell the user the server is running at `http://localhost:8080`.
+Tell the user:
+- Server is running at `http://localhost:8080`
+- Logs go to `{ui_path}/server.log`
+- To stop / restart / check status later: `sh start.sh stop` (or `start.bat stop` on Windows), same for `status` and `restart`
+
+On Windows the user runs `start.bat` instead of `sh start.sh` — same commands.
 
 If Node.js is not available — skip and warn.
 
@@ -173,11 +179,11 @@ Next steps:
 ## On Reinitialize
 
 When the project is already set up and user wants to reinit:
-* Update infrastructure files (index.html, system.css, utils.js, etc.) — safe to overwrite
-* Do NOT touch: common.css, anything in Components/, Screens/, Flows/, Animations/, Design/, Lore/
+* Update infrastructure files (index.html, utils.js, inspector.js, scenario-player.js, server.js, start.js, start.sh, start.bat) — safe to overwrite. Re-apply `chmod +x {ui_path}/start.sh {ui_path}/start.js` after copy.
+* Do NOT touch: common.css, anything in Components/, Screens/, Flows/, Animations/, Design/, Lore/, Drafts/
 * system.css: safe to overwrite UNLESS user customized the tool theme — in that case, preserve the `--sys-*` variable values
 * Do NOT touch: .claude/project-structure.json (unless user wants to change paths)
-* Restart the server
+* Restart the server: `cd {ui_path} && sh start.sh restart`
 
 ## Rules
 
