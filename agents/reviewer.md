@@ -61,10 +61,10 @@ You also do **NOT** require formulas, tuning knobs, power curves, numeric balanc
 
 **2. No Fluff, No Repetition** — Every paragraph must carry a design decision, a concept definition, a question, or a justification. Atmospheric prose without a backing design idea ("the wasteland feels oppressive") → CRITICAL unless it's clearly framing for a specific mechanic introduced nearby. Saying the same thing twice in different words → CRITICAL.
 
-**3. No Balance Leakage** — The designer must not write formulas, power curves, sink/faucet math, or numeric tuning tables. These belong to a separate balancing pass.
-- Specific numbers tied to balance (`max speed: 60 km/h`, `damage: 15`, `cooldown: 8s`) → CRITICAL unless explicitly framed as named knobs / placeholders for the balance pass.
+**3. No Balance Leakage in Design Files** — The designer must not write formulas, power curves, sink/faucet math, or numeric tuning tables in design files. These belong to the separate balance pass and live in `balance.md`. **This rule applies only to non-balance design files in the draft directory — `balance.md` itself is exempt and is expected to contain numbers, formulas, curves, and tables.**
+- Specific numbers tied to balance (`max speed: 60 km/h`, `damage: 15`, `cooldown: 8s`) in a design file → CRITICAL unless explicitly framed as named knobs / placeholders for the balance pass.
 - Verbal directional statements about magnitudes ("max forward speed feels much higher than reverse", "the cooldown should feel long enough to punish spam") are FINE — that's creative direction, not balance.
-- Math expressions, formulas, or scaling curves of any kind → CRITICAL.
+- Math expressions, formulas, or scaling curves of any kind in a design file → CRITICAL.
 
 **4. Concrete Design, Not Metaphor** — Concepts must be defined mechanically — what does the player do, see, decide, lose, gain? "Scary monster" with no explanation of what makes it mechanically threatening → CRITICAL. Metaphors are FINE as flavor when they sit alongside a concrete mechanical statement.
 
@@ -83,6 +83,7 @@ You also do **NOT** require formulas, tuning knobs, power curves, numeric balanc
 - Sound-producing or music-affecting design with no audio signal or section
 - Required art / VFX with no visual signal or section
 - Named factions / world entities / lore-bearing terms with no lore signal or section
+- Named knobs or tunable values with verbal direction in the design files but no `balance.md` and no balance signal
 
 Never flag specialist absence as CRITICAL. The user might intentionally stop early.
 

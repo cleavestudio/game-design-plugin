@@ -191,7 +191,10 @@ Include `SIGNAL:` lines at the end of your final response (alongside `STATUS: RE
 
 - `SIGNAL: The crystal system needs lore — in-world names, origin of crystals, which factions control mining and why.`
 - `SIGNAL: The base role described here implies a small HUD element showing fuel and base status. Needs a UI pass.`
+- `SIGNAL: Balance pass needed — named knobs to resolve: TTK target for common enemies, fuel drain rate, scanner range. Verbal direction is in the draft.`
 - `SIGNAL: Contradiction found — project lore says magic is forbidden but this design adds a Mage class. User must decide.`
+
+**Balance signal — when to raise it.** Raise a balance signal whenever your design contains named knobs with verbal direction (e.g. "max forward speed feels much higher than reverse", "cooldown should feel long enough to punish spam") and the feature's behavior depends on the values being chosen. List the knobs in the signal so the balance pass knows the work scope. If the feature is purely structural and has no tunable knobs (e.g. a pure UI flow, a dialogue branching system without timing values), do NOT raise the signal.
 
 **Edge Cases:**
 - Project files missing (no Synopsis/Pillars/Visuals): These are foundational. If they don't exist, stop and tell the user. Use `AskUserQuestion` to extract: game genre, platform, core fantasy, and 3-5 design pillars. Write them to the project before proceeding with any block.

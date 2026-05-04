@@ -81,11 +81,11 @@ A feature document uses the following sections, in this order. Include only the 
 1. **Overview** — what this feature is and why it exists, in one paragraph
 2. **Player Fantasy** — what the player feels (MDA Aesthetics, SDT needs, primary player archetypes if relevant)
 3. **Connection to Design Pillars** — how this supports the project's pillars; quote pillar text where relevant
-4. **Core Mechanics** — rules, states, interactions in prose / tables / state lists. **No formulas, no balance numbers** — those belong to a separate balancing pass.
+4. **Core Mechanics** — rules, states, interactions in prose / tables / state lists. **No formulas, no balance numbers here** — those go in the Balance section.
 5. **Integration Points** — how this connects to existing systems, what flows in and out, who owns what interface
 6. **Dependencies** — what this requires that may not exist yet, expected interface contract for each
 7. **Edge Cases** — unusual situations and how the design handles them; degenerate-strategy notes if present in the draft
-8. **Open Questions** — anything the user hasn't decided yet, or anything punted to the balance pass. **Always include this section.**
+8. **Open Questions** — anything the user hasn't decided yet, or anything punted to playtest. **Always include this section.**
 
 Specialist sections, included only if the draft has them or specialists added them during enrichment:
 
@@ -93,10 +93,13 @@ Specialist sections, included only if the draft has them or specialists added th
 10. **UI Specification** — links to mockup files in the UI folder (paths only, no inline diagrams)
 11. **Audio Specification** — sound events, music impact, ambient changes
 12. **Visual & Asset Specification** — required art assets, animations, VFX
+13. **Balance** — concrete numbers, formulas, curves, sample tables, sensitivity, cross-feature dependencies. Source: a `balance.md` file in the draft directory if present. Preserve its structure and content verbatim — knob entries, curve formulas, sample tables, justifications, sensitivity tags. This is the only section where formulas and specific numbers belong; in every other section they remain forbidden.
 
 **Mapping rule (FEATURE mode):** when reorganizing the draft into this structure, group draft content by topic, not by draft order. A single draft block may map to multiple sections; multiple draft blocks may merge into one section. Never lose content. Never duplicate it across sections.
 
-**No-balance rule (FEATURE mode):** if the draft accidentally contains formulas, power curves, sink/faucet math, or specific balance numbers tied to tuning, **do not copy them as authoritative**. Move them under Open Questions as "Balance candidates: [verbatim list]" so the balancing pass picks them up later. Verbal directional statements are fine in Core Mechanics.
+**No-balance rule (FEATURE mode):** if a **non-balance** draft file (a design block) contains formulas, power curves, sink/faucet math, or specific balance numbers tied to tuning, **do not copy them as authoritative**. Move them under Open Questions as "Balance candidates: [verbatim list]" so the balance pass picks them up later. Verbal directional statements are fine in Core Mechanics.
+
+**Balance source (FEATURE mode):** if the draft directory contains a `balance.md` file, that file is the **authoritative source** for the Balance section. Copy its content into the Balance section preserving structure (Target Shape, Cross-Feature Dependencies, Knobs, Curves, Sensitivity Map, Open Questions sub-list). Do not reformat the math. Do not summarize values away. If `balance.md` is missing but the design has named knobs, write the Balance section heading and mark it `Open: balance pass not yet completed`.
 
 **Document Rules:**
 
