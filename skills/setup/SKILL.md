@@ -1,14 +1,16 @@
 ---
 name: setup
-description: This skill should be used when the user wants to "set up the project", "initialize game design", "run setup", "create the project structure", "reinitialize", or "start the UI server". Initializes directory structure, copies UI Design System infrastructure, and starts the dev server.
+description: This skill should be used when the user wants to "set up the project", "initialize game design", "run setup", "create the project structure", "reinitialize", "connect a Miro board", or "start the UI server". Initializes storage mode (files / Miro / both), directory structure, copies UI Design System infrastructure, and starts the dev server.
 argument-hint: "[no arguments]"
 user-invocable: true
-allowed-tools: Read, LS, Glob, Grep, Write, Edit, Bash, Agent, AskUserQuestion
+allowed-tools: Read, LS, Glob, Grep, Write, Edit, Bash, AskUserQuestion, ToolSearch
 ---
 
 # Plugin Setup
 
 Initialize the game design plugin for this project. Handle everything — the user does nothing manually.
+
+Storage-mode semantics are defined in `${CLAUDE_PLUGIN_ROOT}/shared/storage-modes.md` (the plugin root's `shared/` folder, two levels above this skill's base directory) — read it first.
 
 ## Workflow
 
@@ -24,68 +26,54 @@ Before asking the user ANYTHING, scan the project thoroughly:
 
 **2a. Find existing documents:**
 * Glob for `**/*.md` (excluding node_modules, .git, .claude)
-* Look for folders that contain game design documents, lore, world-building, UI mockups
-* Identify the root folder where design documents live (might be `GDD/`, `Design/`, `docs/`, or documents might be in the root of a folder without subfolders)
+* Look for folders containing game design documents, lore, world-building, UI mockups
+* Identify the root folder where design documents live (`GDD/`, `Design/`, `docs/`, or flat)
 
 **2b. Read key documents:**
-* Search for Synopsis, Design Pillars, Visuals, or any document that describes the game
-* Read them to understand: game genre, platform, visual style, setting
-* This information is used later — do NOT ask the user about things that are already documented
+* Search for Synopsis, Design Pillars, Visuals, or any document describing the game
+* Read them to understand genre, platform, visual style, setting — do NOT ask the user about things already documented
 
 **2c. Assess the structure:**
-* Does the project have separate folders for design, lore, UI? Or is everything flat in one folder?
-* Are there already markdown documents with game mechanics?
-* Is there any lore/narrative content?
-* Is there any UI work?
+* Separate folders for design/lore/UI, or flat? Existing mechanics docs? Lore? UI work?
 
-### 3. Determine Project Structure
+### 3. Storage Mode (MANDATORY — do NOT skip)
 
-**(MANDATORY — do NOT skip)** Present the situation to the user using `AskUserQuestion`. Do NOT proceed until the user responds.
+Ask with `AskUserQuestion` where the game design work lives:
+* **Files** — everything in markdown files in this repo (classic).
+* **Miro** — design thinking and documents live on a Miro board; only the UI Design System lives in files.
+* **Both** — Miro for thinking (brainstorm, dependency graph), files for final documents.
 
-**If documents exist but structure is flat (e.g., all .md files in GDD/ without subfolders):**
-Show what you found and propose organizing:
-* "I found N design documents in GDD/. Currently they're all in one folder. I'd like to organize them into subfolders for better navigation. Proposed structure:
-  * GDD/Design/ — game design documents (I'll move existing .md files here)
-  * GDD/Lore/ — lore and world-building (I'll move lore-related files here)
-  * GDD/UI/ — UI Design System (new)"
-* Options: "Reorganize as proposed", "Keep current structure, just add UI/", "Custom"
+If Miro is involved, ask for the board URL (the user can paste it as free text). Verify via `ToolSearch` that **both** Miro MCP servers are available: `miro` (official, for creating/editing board content) and `miro-connector` (studio server, for cheap board reading and connector styling — see `shared/miro-method.md` → Tooling). If either is missing, warn what will be degraded, but continue setup.
 
-**If structure already has subfolders:**
-Map what exists to the required categories (design, lore, ui). Show the mapping, ask to confirm.
+### 4. Determine Directory Structure
 
-**If nothing found:**
-Propose default structure. Ask user to confirm or customize the root folder name (default: `GDD`).
+**Files / Both** (MANDATORY — do NOT skip): present the situation using `AskUserQuestion`. Do NOT proceed until the user responds.
 
-**If user wants custom paths:**
-Accept them. Map to required categories.
+* **Documents exist but flat:** show what you found, propose organizing into `{root}/Design`, `{root}/Lore`, `{root}/UI` (options: "Reorganize as proposed", "Keep current structure, just add UI/", "Custom").
+* **Structure already has subfolders:** map to the categories (design, lore, ui), show the mapping, confirm.
+* **Nothing found:** propose the default structure; confirm root folder name (default `GDD`).
+* **Custom paths:** accept and map.
 
 **CRITICAL: Always ask before moving or reorganizing files. NEVER move files without explicit approval.**
 
-### 4. Create/Organize Directories
+**Miro only:** no Design/Lore/Drafts folders. Only the UI path is needed (default `{root}/UI` or `UI/`) — the UI Design System always lives in files. Confirm the UI location with the user.
 
-Based on user's choice:
-* Create directories that don't exist
-* Move files if user approved reorganization
-* Create the `Drafts/` folder inside the project (visible to the user, NOT inside `.claude/`) — drafts are work-in-progress documents the user should be able to read and edit directly
+### 5. Create/Organize Directories
 
-```bash
-mkdir -p {root}/Design {root}/Lore {root}/UI {root}/Drafts
-```
+Based on the user's choice:
+* Create directories that don't exist; move files only if the user approved.
+* **Files / Both:** create `{root}/Design {root}/Lore {root}/UI {root}/Drafts` (drafts are visible work-in-progress documents, NOT inside `.claude/`). If `{root}` is empty, create the folders at the workspace root.
+* **Miro only:** create only the UI path.
+* Always create `{ui_path}/References/` (holds the design tokens reference page). The rest of the UI internal structure (Components/, Screens/, etc.) is managed by the design-ui skill — do NOT create those here.
 
-If `{root}` is empty (project root has no wrapping folder), create the folders directly at the workspace root: `mkdir -p Design Lore UI Drafts`.
+### 6. Save Project Structure Config
 
-Create the `References/` directory inside the UI path — it holds the design tokens reference page:
-```bash
-mkdir -p {ui_path}/References
-```
+Write `.claude/project-structure.json` with the storage mode and resolved paths:
 
-The rest of the UI internal structure (Components/, Screens/, etc.) is managed by the ui-designer agent — do NOT create those subdirectories here.
-
-### 5. Save Project Structure Config
-
-Write `.claude/project-structure.json` with the resolved paths:
 ```json
 {
+  "storage": "both",
+  "miro": { "board": "https://miro.com/app/board/uXjV.../" },
   "root": "GDD",
   "design": "GDD/Design",
   "lore": "GDD/Lore",
@@ -94,11 +82,13 @@ Write `.claude/project-structure.json` with the resolved paths:
 }
 ```
 
-If `root` is empty, the paths are just the folder names (e.g. `"drafts": "Drafts"`).
+* `miro` only when storage is `miro` or `both`.
+* `miro` mode: omit `design`, `lore`, `drafts` — keep `root` and `ui`.
+* If `root` is empty, paths are just folder names (e.g. `"drafts": "Drafts"`).
 
-**Migration note:** if `project-structure.json` already exists but has no `drafts` field (old setup), add it on reinit. Default to `{root}/Drafts` (or `Drafts` if root is empty). If a `Drafts/` folder already exists in the project, use it; if not, create it.
+**Migration:** if an existing config has no `storage` field (old setup), it's a files project — on reinit, ask whether the user wants to connect Miro; add `"storage"` accordingly. If it has no `drafts` field (files/both), add it — default `{root}/Drafts`, reuse an existing `Drafts/` folder if present.
 
-### 6. Copy UI Infrastructure
+### 7. Copy UI Infrastructure
 
 Copy all infrastructure files from the plugin's `ui-template/` directory to `{ui_path}/` using Bash, then make the shell launcher executable:
 ```bash
@@ -106,33 +96,25 @@ cp ${CLAUDE_PLUGIN_ROOT}/ui-template/index.html ${CLAUDE_PLUGIN_ROOT}/ui-templat
 chmod +x {ui_path}/start.sh {ui_path}/start.js
 ```
 
-**NEVER overwrite `common.css`** if it already exists — it contains the game's visual tokens. **NEVER overwrite `system.css`** if user has customized the tool theme (check if `--sys-*` values differ from defaults). All other infrastructure files are safe to overwrite on reinit.
+**NEVER overwrite `common.css`** if it exists — it contains the game's visual tokens. **NEVER overwrite `system.css`** if the user customized the tool theme (check if `--sys-*` values differ from defaults). All other infrastructure files are safe to overwrite on reinit.
 
-### 7. Tool Theme (system.css)
+### 8. Tool Theme (system.css)
 
-**(MANDATORY — do NOT skip)** The design system tool's appearance is controlled by `--sys-*` CSS variables at the top of `system.css`. Use `AskUserQuestion` to ask the user how they want the tool to look. Do NOT proceed until the user responds.
+**(MANDATORY — do NOT skip)** The design system tool's appearance is controlled by `--sys-*` CSS variables at the top of `system.css`. Ask with `AskUserQuestion` how the user wants the tool to look:
 
 * Options: "Describe my style" (e.g., "warm dark with orange accent", "light minimalist", "green terminal"), "Keep default (dark purple)", "Skip"
+* **Describe my style** — edit the `--sys-*` variables in `{ui_path}/system.css` to match. Variables: `--sys-bg`, `--sys-surface`, `--sys-surface-hover`, `--sys-border`, `--sys-border-hover`, `--sys-text`, `--sys-text-dim`, `--sys-text-bright`, `--sys-accent`, `--sys-accent-dim`, `--sys-danger`, `--sys-radius`.
 
-**Based on choice:**
-* **Keep default / Skip** — do nothing.
-* **Describe my style** — edit the `--sys-*` variables in `{ui_path}/system.css` using the Edit tool to match the user's description. The variables: `--sys-bg`, `--sys-surface`, `--sys-surface-hover`, `--sys-border`, `--sys-border-hover`, `--sys-text`, `--sys-text-dim`, `--sys-text-bright`, `--sys-accent`, `--sys-accent-dim`, `--sys-danger`, `--sys-radius`.
+### 8b. Game Tokens (common.css)
 
-### 7b. Game Tokens (common.css)
+`common.css` defines the game's visual identity — separate from the tool theme.
 
-`common.css` defines the game's visual identity — colors, fonts, spacing used by UI mockups. It is separate from the tool theme.
+**If it exists:** skip. **If not (MANDATORY — ask, never create silently):** `AskUserQuestion` with options: "Create from project style" (only if the project has Visuals/style docs), "Describe game style", "Skip for now".
 
-**If `common.css` already exists:** skip. It will be created/updated by the ui-designer agent when the user runs `/game-design:design-ui`.
+* **Create from project style / Describe game style** — load the `game-design:design-ui` skill and run its **Tokens** mode with the gathered style context (genre, platform, setting, visual direction — from docs or from the user's description).
+* **Skip** — common.css will be created on the first UI task.
 
-**If `common.css` doesn't exist (MANDATORY — do NOT skip):** ask the user using `AskUserQuestion`. Do NOT create common.css without asking:
-* Options: "Create from project style" (only if project has Visuals/style docs), "Describe game style", "Skip for now"
-
-**Based on choice:**
-* **Create from project style** — Launch `ui-designer` agent in **Mode C** with the task: "Mode C: Create {ui_path}/common.css". Pass the full text of Visuals/Synopsis documents and a concrete style summary (genre, platform, setting, visual direction).
-* **Describe game style** — ask the user for platform and style description. Launch `ui-designer` in **Mode C** with: "Mode C: Create {ui_path}/common.css. Platform: {platform}. Style: {description}."
-* **Skip** — do nothing. common.css will be created later when the user first runs `/game-design:design-ui`.
-
-### 8. Check Node.js
+### 9. Check Node.js
 
 ```bash
 node --version
@@ -140,55 +122,34 @@ node --version
 
 If not available — warn that the UI Design System dev server requires Node.js. The rest of the plugin works without it.
 
-### 9. Start UI Server
+### 10. Start UI Server
 
-If Node.js is available, launch the server in the background via the cross-platform launcher (PID file + log file, with `start` / `stop` / `status` / `restart` commands):
+If Node.js is available, launch the server in the background via the cross-platform launcher:
 ```bash
 cd {ui_path} && sh start.sh
 ```
 
-Tell the user:
-- Server is running at `http://localhost:8080`
-- Logs go to `{ui_path}/server.log`
-- To stop / restart / check status later: `sh start.sh stop` (or `start.bat stop` on Windows), same for `status` and `restart`
+Tell the user: server at `http://localhost:8080`; logs in `{ui_path}/server.log`; stop/restart/status via `sh start.sh stop` (`start.bat stop` on Windows). If Node.js is missing — skip and warn.
 
-On Windows the user runs `start.bat` instead of `sh start.sh` — same commands.
+### 11. Summary
 
-If Node.js is not available — skip and warn.
-
-### 10. Summary
-
-Report everything that was done:
-```
-Setup Complete
-==============
-Project structure: {root}/
-  Design/  — game design documents
-  Lore/    — lore documents
-  UI/      — UI Design System
-  Drafts/  — work-in-progress drafts (you can read/edit these too)
-
-UI Server: http://localhost:8080
-
-Next steps:
-  Start designing — just describe what you want to design
-  /game-design:design-ui     — create a UI component or screen
-  /game-design:cleanup-drafts — manage draft files
-```
+Report what was done — structure created (per storage mode), Miro board connected (if any), UI server status, and next steps:
+* Start designing — just describe what you want to design (or brainstorm on the board)
+* `/game-design:design-ui` — create a UI component or screen
+* `/game-design:cleanup-drafts` — manage draft files (files/both projects)
 
 ## On Reinitialize
 
-When the project is already set up and user wants to reinit:
-* Update infrastructure files (index.html, utils.js, inspector.js, scenario-player.js, server.js, start.js, start.sh, start.bat) — safe to overwrite. Re-apply `chmod +x {ui_path}/start.sh {ui_path}/start.js` after copy.
+* Update infrastructure files (index.html, utils.js, inspector.js, scenario-player.js, server.js, start.js, start.sh, start.bat) — safe to overwrite. Re-apply `chmod +x`.
 * Do NOT touch: common.css, anything in Components/, Screens/, Flows/, Animations/, Design/, Lore/, Drafts/
-* system.css: safe to overwrite UNLESS user customized the tool theme — in that case, preserve the `--sys-*` variable values
-* Do NOT touch: .claude/project-structure.json (unless user wants to change paths)
+* system.css: safe to overwrite UNLESS the user customized the theme — then preserve `--sys-*` values.
+* `.claude/project-structure.json`: only change if the user wants different paths or a different storage mode.
 * Restart the server: `cd {ui_path} && sh start.sh restart`
 
 ## Rules
 
 * Detect language from existing project files first, then from user messages. Use it throughout.
-* **Read first, ask second.** Never ask the user about information that's already in the project documents.
+* **Read first, ask second.** Never ask about information already in the project documents.
 * **NEVER** move or reorganize files without explicit user approval.
 * **NEVER** expose internal details. Say "Setting up the project..." not "Copying ui-template/inspector.js to GDD/UI/"
 * If anything fails, explain what went wrong and suggest a fix.

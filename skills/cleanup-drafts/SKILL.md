@@ -12,7 +12,7 @@ Scan the project's `drafts/` folder, compare each draft (file or directory) agai
 
 ## Workflow
 
-1. **Read project structure:** Read `.claude/project-structure.json` to know where drafts and project documents live (`drafts`, `design`, `lore`, `ui` paths). If `drafts` is missing from the config, default to `{root}/Drafts/` (or `Drafts/` if root is empty).
+1. **Read project structure:** Read `.claude/project-structure.json` to know where drafts and project documents live (`drafts`, `design`, `lore`, `ui` paths). If `storage` is `"miro"`, the project has no draft files — tell the user and exit. If `drafts` is missing from the config, default to `{root}/Drafts/` (or `Drafts/` if root is empty).
 
 2. **Scan drafts:** Glob `{drafts}/*.md` for single-file drafts and `{drafts}/*/` for design draft directories.
    * If nothing found — tell the user and exit.
