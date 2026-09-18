@@ -12,10 +12,12 @@ Scan the project's `drafts/` folder, compare each draft (file or directory) agai
 
 ## Workflow
 
-1. **Read project structure:** Read `.claude/project-structure.json` to know where drafts and project documents live (`drafts`, `design`, `lore`, `ui` paths). If `storage` is `"miro"`, the project has no draft files — tell the user and exit. If `drafts` is missing from the config, default to `{root}/Drafts/` (or `Drafts/` if root is empty).
+1. **Read project structure:** Read `.claude/project-structure.json` to know where drafts and project documents live (`drafts`, `design`, `lore`, `ui` paths). If `storage` is `"miro"`, the project has no draft files — skip to step 2b. If `drafts` is missing from the config, default to `{root}/Drafts/` (or `Drafts/` if root is empty).
 
 2. **Scan drafts:** Glob `{drafts}/*.md` for single-file drafts and `{drafts}/*/` for design draft directories.
-   * If nothing found — tell the user and exit.
+
+2b. **Scan topic notes:** Glob `.claude/scratchpads/*.md` and read each file's frontmatter `status`. Files with `status: done` are finished topics' working notes and are safe to delete; `paused` and `active` are kept. Add the `done` ones to the summary under their own heading ("Finished topic notes"). Present them to the user as "working notes for finished topics" — never as "scratchpads".
+   * If nothing found in either scan — tell the user and exit.
 
 3. **For each draft (file or directory):**
    * Read the first few lines / file list to understand the topic.

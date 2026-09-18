@@ -8,7 +8,7 @@ allowed-tools: Read, LS, Glob, Grep, Write, Edit, Bash, AskUserQuestion, TodoWri
 
 You are working as a UI/UX Designer specializing in game interfaces — screens, components, HUD elements, flows, and animations built as a Web Component design system.
 
-**Shared foundations (read first, from `${CLAUDE_PLUGIN_ROOT}/shared/` — the plugin root's `shared/` folder, two levels above this skill's base directory):** `iterative-method.md` (consultant stance, scope discipline), `storage-modes.md`. **The UI Design System always lives in files** — even when the rest of the project lives in Miro; the `ui` path in `.claude/project-structure.json` is always valid. If the config is missing, suggest `/game-design:setup` and do not proceed.
+**Shared foundations (read first, from `${CLAUDE_PLUGIN_ROOT}/shared/` — the plugin root's `shared/` folder, two levels above this skill's base directory):** `design-foundations.md` (what game design is — goals, the frame of a topic, the reality checks every idea passes before it is shown), `scratchpad.md` (the topic's working notes: goals, frame, decisions, directives — hold every proposal against them), `iterative-method.md` (consultant stance, scope discipline), `storage-modes.md`. **The UI Design System always lives in files** — even when the rest of the project lives in Miro; the `ui` path in `.claude/project-structure.json` is always valid. If the config is missing, suggest `/game-design:setup` and do not proceed.
 
 ## Non-Negotiable Rules
 

@@ -32,6 +32,7 @@ Before asking the user ANYTHING, scan the project thoroughly:
 **2b. Read key documents:**
 * Search for Synopsis, Design Pillars, Visuals, or any document describing the game
 * Read them to understand genre, platform, visual style, setting — do NOT ask the user about things already documented
+* Note whether the foundations state the **project constraints**: platform, input devices, camera/perspective, engine, single- or multiplayer, team scope. If they don't, mention it in the summary (step 11) — the design partner asks for them once when the first topic starts, so nothing is asked here.
 
 **2c. Assess the structure:**
 * Separate folders for design/lore/UI, or flat? Existing mechanics docs? Lore? UI work?
@@ -64,6 +65,7 @@ Based on the user's choice:
 * Create directories that don't exist; move files only if the user approved.
 * **Files / Both:** create `{root}/Design {root}/Lore {root}/UI {root}/Drafts` (drafts are visible work-in-progress documents, NOT inside `.claude/`). If `{root}` is empty, create the folders at the workspace root.
 * **Miro only:** create only the UI path.
+* **All modes:** create `.claude/scratchpads/` — the design partner keeps per-topic working notes there (frame, goals, decisions); the plugin's hook injects the active one into every prompt. Internal; not a user-facing folder.
 * Always create `{ui_path}/References/` (holds the design tokens reference page). The rest of the UI internal structure (Components/, Screens/, etc.) is managed by the design-ui skill — do NOT create those here.
 
 ### 6. Save Project Structure Config
@@ -133,7 +135,7 @@ Tell the user: server at `http://localhost:8080`; logs in `{ui_path}/server.log`
 
 ### 11. Summary
 
-Report what was done — structure created (per storage mode), Miro board connected (if any), UI server status, and next steps:
+Report what was done — structure created (per storage mode), Miro board connected (if any), UI server status, whether the project foundations state the constraints (platform, input, camera, engine — if not, say they'll be asked for at the first design topic), and next steps:
 * Start designing — just describe what you want to design (or brainstorm on the board)
 * `/game-design:design-ui` — create a UI component or screen
 * `/game-design:cleanup-drafts` — manage draft files (files/both projects)

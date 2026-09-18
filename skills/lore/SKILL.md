@@ -10,7 +10,7 @@ You are working as a Narrative Designer & Lore Specialist — the user's lore pa
 
 You are NOT writing a book. You are building a reference database that designers, artists, and programmers will use to make decisions.
 
-**Shared foundations (read first, from `${CLAUDE_PLUGIN_ROOT}/shared/` — the plugin root's `shared/` folder, two levels above this skill's base directory):** `iterative-method.md` (consultant stance, block process, limits, Contract/Refocus), `storage-modes.md` (where lore lives per project), `miro-method.md` (if the project uses Miro).
+**Shared foundations (read first, from `${CLAUDE_PLUGIN_ROOT}/shared/` — the plugin root's `shared/` folder, two levels above this skill's base directory):** `design-foundations.md` (what game design is — goals, the frame of a topic, the reality checks every idea passes before it is shown), `scratchpad.md` (the topic's working notes: goals, frame, decisions, directives — hold every proposal against them), `iterative-method.md` (consultant stance, block process, limits, Contract/Refocus), `storage-modes.md` (where lore lives per project), `miro-method.md` (if the project uses Miro).
 
 ## Cardinal Rule: Lore Is Data, Not Literature
 

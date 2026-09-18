@@ -30,16 +30,25 @@ Set during `/game-design:setup` and stored in `.claude/project-structure.json`:
 - **Miro** — design thinking and decisions live on a board as a **dependency graph** (nodes = decisions/mechanics/pillars, edges = dependencies, color = confidence: green axiom / yellow hypothesis / red in question). Only the UI Design System stays in files.
 - **Both** — Miro for thinking, files for final documents.
 
-Shared method files live in `shared/`: the iterative process (`iterative-method.md`), storage semantics (`storage-modes.md`), and the Miro graph method (`miro-method.md`) — every skill reads them instead of duplicating the rules.
+Shared method files live in `shared/` — every skill reads them instead of duplicating the rules:
+
+- `design-foundations.md` — **what game design is**: state/rules/feedback, goal-oriented design, pillars and the abstraction test, the frame of a topic, the reality checks every idea passes before it is shown, MDA / SDT / Flow / degenerate-strategy frameworks, craft rules.
+- `scratchpad.md` — per-topic working notes (frame, goals, decisions, rejected ideas, user directives) kept in `.claude/scratchpads/`.
+- `design-checklist.md` — the short form of the foundations, injected on every turn.
+- `iterative-method.md` — the consultant stance and the one-block-per-turn process.
+- `storage-modes.md`, `miro-method.md` — storage semantics and the Miro graph method.
 
 ## How it works
 
 1. Describe what you want to design — the design partner picks up automatically
-2. Work goes one block at a time: discussion → your decision → capture (draft file or board node)
-3. When the design is done, it's enriched where genuinely needed (lore, UI, audio, visual, balance)
-4. For file-based projects: a silent review pass, then the final document is written to your project
+2. A substantial topic starts with its **frame** (what existing material is fixed, reference, or being rethought) and its **goals** — the compass every later idea is checked against
+3. Work goes one block at a time: discussion → your decision → capture (draft file or board node). Ideas are filtered in the partner's reasoning before they are shown: can it be played, is it software, does it serve a goal, is it feasible for this platform and engine, does it fit the project
+4. When the design is done, it's enriched where genuinely needed (lore, UI, audio, visual, balance)
+5. For file-based projects: a silent review pass, then the final document is written to your project
 
-All output is structured, parameterized, and implementation-ready — no fluff, no vague descriptions.
+### Working notes and the hook
+
+Each topic gets a small working-notes file in `.claude/scratchpads/` holding its frame, goals, fixed decisions, rejected ideas, open questions, and your explicit directives. A `UserPromptSubmit` hook (`hooks/inject-scratchpad.js`, Node.js) injects the active one plus the design checklist into every prompt, so the state of the topic and the design rules stay at the front of attention no matter how much board or document material was loaded earlier. Without Node.js the hook is silent and the partner reads the file itself.
 
 ## Setup
 
@@ -87,6 +96,7 @@ After setup (files / both):
 
 .claude/
   project-structure.json — storage mode + path configuration
+  scratchpads/           — per-topic working notes (internal; all modes)
 ```
 
 Miro-only projects get just `{root}/UI/` plus the board link in the config.
@@ -94,7 +104,7 @@ Miro-only projects get just `{root}/UI/` plus the board link in the config.
 ## Requirements
 
 - Claude Code
-- Node.js (optional, for the UI Design System dev server)
+- Node.js (optional: the UI Design System dev server and the working-notes hook)
 - For Miro-based projects: two MCP servers — `miro` (official, https://mcp.miro.com — creates/edits board content) and `miro-connector` (studio server — token-cheap board reading via `board_graph`, item search, connector stroke styling)
 
 ## Author

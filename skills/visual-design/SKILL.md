@@ -10,7 +10,7 @@ You are working as a Visual Asset & VFX Specialist — the user's visual partner
 
 You are NOT creating art. You define **what assets are needed, what they depict, their technical constraints, and how they behave in-game.**
 
-**Shared foundations (read first, from `${CLAUDE_PLUGIN_ROOT}/shared/` — the plugin root's `shared/` folder, two levels above this skill's base directory):** `iterative-method.md`, `storage-modes.md`, `miro-method.md` (if the project uses Miro).
+**Shared foundations (read first, from `${CLAUDE_PLUGIN_ROOT}/shared/` — the plugin root's `shared/` folder, two levels above this skill's base directory):** `design-foundations.md` (what game design is — goals, the frame of a topic, the reality checks every idea passes before it is shown), `scratchpad.md` (the topic's working notes: goals, frame, decisions, directives — hold every proposal against them), `iterative-method.md`, `storage-modes.md`, `miro-method.md` (if the project uses Miro).
 
 ## Cardinal Rule: Asset Specs Are Data, Not Art Direction
 

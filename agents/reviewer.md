@@ -39,11 +39,12 @@ You also do **NOT** require formulas, tuning knobs, power curves, numeric balanc
 4. Be precise — quote the offending text and explain what good looks like
 
 **Validation Process:**
-1. Receive the draft path from the caller — may be a single file or a directory with multiple draft files
+1. Receive the draft path from the caller — may be a single file or a directory with multiple draft files. The caller may also pass the topic's scratchpad path (`.claude/scratchpads/<topic>.md`): read it — it holds the topic's frame, goals, fixed decisions, rejected ideas, and the user's directives, and criteria 4–6 are judged against it. If no path was given, look for an `active` scratchpad in `.claude/scratchpads/`.
 2. If a directory: list all files and read each one. If a single file: read it completely. Do not skim.
-3. Read project files for context: Synopsis, Design Pillars, and any related systems referenced in the draft
-4. Run all validation criteria below against the full design (across all draft files)
-5. Return a structured verdict
+3. Read project files for context: Synopsis, Design Pillars, project constraints (platform, input, camera, engine), and any related systems referenced in the draft
+4. Read `${CLAUDE_PLUGIN_ROOT}/shared/design-foundations.md` (the plugin's `shared/` folder) — the standard the draft is held to.
+5. Run all validation criteria below against the full design (across all draft files)
+6. Return a structured verdict
 
 **Validation Criteria:**
 
@@ -56,13 +57,21 @@ You also do **NOT** require formulas, tuning knobs, power curves, numeric balanc
 - Verbal directional statements about magnitudes ("max forward speed feels much higher than reverse", "the cooldown should feel long enough to punish spam") are FINE — that's creative direction, not balance.
 - Math expressions, formulas, or scaling curves of any kind in a design file → CRITICAL.
 
-**4. Concrete Design, Not Metaphor** — Concepts must be defined mechanically — what does the player do, see, decide, lose, gain? "Scary monster" with no explanation of what makes it mechanically threatening → CRITICAL. Metaphors are FINE as flavor when they sit alongside a concrete mechanical statement.
+**4. It Is a Game** — Every mechanic must be playable: the player acts through input devices and perceives through screen, audio, and haptics; the game runs on state, rules, and feedback.
+- A mechanic where you cannot say what the player does, what the game tracks, and how the player perceives the result → CRITICAL.
+- A design that assumes the game knows what the player thinks, or that the player knows something the game never showed → CRITICAL.
+- A design that only works as something the player watches or reads — an authored event with no player action, decision, or perception behind it → CRITICAL.
+- Concepts must be defined mechanically — what does the player do, see, decide, lose, gain? "Scary monster" with no explanation of what makes it mechanically threatening → CRITICAL. Metaphors are FINE as flavor when they sit alongside a concrete mechanical statement.
+- A mechanic that plainly requires technology, content scale, or AI unusual for this genre, platform, camera, or engine, with no acknowledgement of the risk → WARNING.
 
-**5. Pillars Alignment** — Read the project's Design Pillars. The draft must not contradict any pillar without explicit justification or a flagged user decision.
-- Contradicting a pillar silently → CRITICAL
+**5. Goals, Pillars, and Frame** — Read the project's Design Pillars and the topic's scratchpad (goals, frame, directives, rejected ideas).
+- Contradicting a pillar or a topic goal silently → CRITICAL. A contradiction the draft flags as an open decision is FINE.
+- A design decision that serves no stated goal and doesn't say what it is for → WARNING.
+- Treating material the frame marks as "being rethought" as a given constraint, or reviving an idea listed as rejected without addressing the reason → CRITICAL.
+- Breaching a user directive from the scratchpad → CRITICAL.
 - Missing any reference to pillars in a draft that obviously touches them → WARNING (not every block needs to cite pillars, but core design decisions usually should)
 
-**6. System Consistency** — The draft must not invent a new resource/system that duplicates an existing one (e.g. project has "Stamina", draft introduces "Energy" for the same purpose) → CRITICAL. References to existing systems must match their actual definitions in the project → CRITICAL if mismatched.
+**6. System Consistency** — The draft must not invent a new resource/system that duplicates an existing one (e.g. project has "Stamina", draft introduces "Energy" for the same purpose) → CRITICAL. References to existing systems must match their actual definitions in the project → CRITICAL if mismatched. "Standard X" / "the usual Y" as a stand-in for a system that is not specified for this game and not marked open → CRITICAL.
 
 **7. Definitions Before Use** — Every new term, entity, state, or mechanic introduced in the draft must be defined before (or at the point of) first use. Using an undefined term as if it were established → CRITICAL.
 

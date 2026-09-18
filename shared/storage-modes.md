@@ -33,6 +33,7 @@ A game design project can live in **markdown files**, in **Miro**, or in **both*
 | Lore, audio specs, visual specs | drafts → project folders | nodes/frames on the board near the owning subtree | thinking on the board; final documents in files |
 | Balance | `balance.md` in the draft dir → Balance section of the doc | balance nodes attached to the feature subtree | `balance.md` → doc |
 | UI mockups | `ui` path | `ui` path (always files) | `ui` path |
+| Topic working notes (frame, goals, decisions, rejections, directives) | `.claude/scratchpads/` (see `scratchpad.md`) | `.claude/scratchpads/` | `.claude/scratchpads/` |
 
 **The principle for `both`: Miro is for thinking, files are for documents.** Exploration, dependency untangling, and decision-fixing happen on the board; when a topic matures and the user wants a document, the settled material is written to markdown (review + write phases). Don't mirror content in both media — each fact lives in one home.
 

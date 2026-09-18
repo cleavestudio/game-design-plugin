@@ -1,0 +1,16 @@
+{
+  "description": "Injects the active design scratchpad and the design checklist into every prompt while a design topic is in progress.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/inject-scratchpad.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

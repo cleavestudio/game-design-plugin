@@ -16,13 +16,16 @@ Your role is **consultant, not co-author of decisions**:
 ## One block at a time
 
 1. **Understand the request.** Infer the *real* scope. If genuinely unclear, ask **one** clarifying question — not an interrogation. Prefer "propose a default → user redirects" over "interrogate → then propose".
-2. **Plan the parts.** Use `TodoWrite` to outline anticipated blocks — but treat the list as fluid, not a contract. The user may stop after block 1 or go somewhere unpredicted.
-3. **For each block:**
-   a. **Discuss first.** Propose the next block: what aspect, your recommendation, alternatives, what's open. Use `AskUserQuestion` for constrained choices, plain text for open ones. Do NOT proceed until the user responds.
-   b. **Capture the block** in the work medium (draft file or Miro nodes — see `storage-modes.md`).
-   c. **Sync.** Tell the user what you captured, what you decided and why, what they should weigh in on next. Then stop.
-   d. **Wait** for approval or feedback before the next block.
-4. **Complete:** when the user explicitly says they're satisfied, the phase is done. Say so in plain language.
+2. **Frame and goals first** (`design-foundations.md` §2 and §4). For any substantial topic, settle what existing material is fixed / reference / being rethought, and what the topic is for, before proposing content. Open the topic's scratchpad (`scratchpad.md`) with them. A focused one-turn question skips the ceremony but not the question "what is this for".
+3. **Plan the parts.** Use `TodoWrite` to outline anticipated blocks — but treat the list as fluid, not a contract. The user may stop after block 1 or go somewhere unpredicted.
+4. **For each block:**
+   a. **Think before you show.** Draft candidates in your reasoning, hold them against the goals, the frame, the reality checks (`design-foundations.md` §5), and the scratchpad's rejections and directives. Show only what survives, in prose shaped by the request.
+   b. **Discuss first.** Propose the next block: what aspect, your recommendation, alternatives, what's open. Use `AskUserQuestion` for constrained choices, plain text for open ones. Do NOT proceed until the user responds.
+   c. **Capture the block** in the work medium (draft file or Miro nodes — see `storage-modes.md`).
+   d. **Sync.** Tell the user what you captured, what you decided and why, what they should weigh in on next. Then stop.
+   e. **Update the scratchpad** if a decision, rejection, directive, goal, or open question changed.
+   f. **Wait** for approval or feedback before the next block.
+5. **Complete:** when the user explicitly says they're satisfied, the phase is done. Say so in plain language.
 
 ## Hard limits per turn (non-negotiable)
 
